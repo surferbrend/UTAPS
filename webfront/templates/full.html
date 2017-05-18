@@ -1,0 +1,123 @@
+    {% include 'head_css.html' %}
+    {% include 'navbar.html' %}
+
+    <title>UTAPS Crash Records Search</title>
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" media="all" href= "https://s3.amazonaws.com/dynatable-docs-assets/css/reset.css" />
+    <link rel="stylesheet" media="all" href="https://s3.amazonaws.com/dynatable-docs-assets/css/bootstrap-2.3.2.min.css" />
+    <link rel="stylesheet" media="all" href="https://s3.amazonaws.com/dynatable-docs-assets/css/application.css" />
+    <link rel="stylesheet" media="all" href="https://s3.amazonaws.com/dynatable-docs-assets/css/project.css" />
+    <link rel="stylesheet" media="all" href="https://s3.amazonaws.com/dynatable-docs-assets/css/pygments.css" />
+    <link rel="stylesheet" media="all" href="https://s3.amazonaws.com/dynatable-docs-assets/css/share.css" />
+    <link href='//fonts.googleapis.com/css?family=Nunito:300' rel='stylesheet' type='text/css'>
+    <link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" media="all" href="https://s3.amazonaws.com/dynatable-docs-assets/css/dynatable-docs.css" />
+    <script type='text/javascript' src='https://s3.amazonaws.com/dynatable-docs-assets/js/jquery-1.9.1.min.js'></script>
+    <script type='text/javascript' src='https://s3.amazonaws.com/dynatable-docs-assets/js/jquery.scrollTo.js'></script>
+    <script type='text/javascript' src='https://s3.amazonaws.com/dynatable-docs-assets/js/jquery.toc.min.js'></script>
+    <script type='text/javascript' src='https://s3.amazonaws.com/dynatable-docs-assets/js/jquery.sharrre-1.2.0.min.js'></script>
+
+
+    <!-- resources for project demos //-->
+
+    <link rel="stylesheet" media="all" href="https://s3.amazonaws.com/dynatable-docs-assets/css/jquery.dynatable.css" />
+
+
+    <script type='text/javascript' src='https://s3.amazonaws.com/dynatable-docs-assets/js/jquery.dynatable.js'></script>
+
+    <script type='text/javascript' src='https://s3.amazonaws.com/dynatable-docs-assets/js/highcharts.js'></script>
+
+<a href='/u/' id="button1"><button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo2">Switch to Unconfirmed Fatalities Records</button></a>
+<a href='/search/'><button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo2">Crashes Not Verified</button></a>
+
+<p><br class="clear" /></p>
+
+<table id="my-final-table" class="table table-bordered">
+  <thead>
+  <tr>
+    <th data-dynatable-column="ID">ID</th>
+    <th data-dynatable-column="PS_Case_ID">PS Case</th>
+    <th data-dynatable-column="Date_of_Crash">Date of Crash</th>
+    <th data-dynatable-column="Main_Road_Name">Road Name</th>
+    <th data-dynatable-column="City">City</th>
+    <th data-dynatable-column="Crash_Verified">Crash_Verified</th>
+    <th data-dynatable-column="Narrative">Narrative</th>
+
+  </tr>
+  </thead>
+  <tbody>
+
+  </tbody>
+</table>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(event) { 
+   
+  $.ajax({
+    type: 'GET',
+    url: 'http://surferbrend.pythonanywhere.com/api/queryall/?format=json',
+    success: function(orders) {
+    				
+            var dynatable = $('#my-final-table').dynatable({
+              dataset: {
+                records: JSON.parse($('#orders').text())
+              },
+              table: {
+              	defaultColumnIdStyle: 'camelCase'
+              }
+            }).data('dynatable');           
+    }
+  });
+
+
+  var processingComplete = function(){
+      $("#my-final-table").children().children().addClass("fila_art");
+  };
+  
+  $.getJSON('http://surferbrend.pythonanywhere.com/api/query/?format=json',
+            function (data) {                
+    
+    var dynatable = $('#my-final-table').data('dynatable');                
+    dynatable.records.updateFromJson({records: data.results});
+    dynatable.records.init();               
+    dynatable.process();                
+  });
+   
+  $('#my-final-table').dynatable({    
+      table: {
+          defaultColumnIdStyle: 'camelCase'
+      }
+  }).bind('dynatable:afterProcess', processingComplete);
+  
+
+  processingComplete();
+
+  $('tbody').on('click', '.fila_art' ,function(){
+      window.open("http://surferbrend.pythonanywhere.com/crash/" + $(this).children().eq(0).text() + "/edit/");
+  });
+});
+</script>  
+
+<style>
+tr {
+  background: #fff;
+  color: #000000;
+}
+tr:hover {
+     background: #f5f5f5;
+     cursor: pointer;
+}
+tr:active {
+     background: #808080;
+     cursor: pointer;
+}
+
+</style>
+
+
+
+
+

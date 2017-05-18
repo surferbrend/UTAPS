@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+{% include 'head_css.html' %}
+{% load rest_framework %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+<style>
+BODY {font-size:80.5%}
+</style>
+
+<body>
+
+
+<form id="sel1" class="form-inline" method="post" action=''>{% csrf_token %}
+{{form|crispy}}
+<input class='btn btn-default' onclick="doit()" type='submit' value ='Submit' />
+</form>
+
+<script>
+  function doit() {
+    parent.location.href = parent.location.href;
+  }
+</script>
+</body>
+
+</div>
+
+</html>

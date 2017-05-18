@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="post">
+        {% if person.published_date %}
+            <div class="date">
+                {{ person.published_date }}
+            </div>
+        {% endif %}
+        <a class="btn btn-default" href="{% url 'person_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+
+        <h1>CASE #{{ person.PS_case }}</h1>
+        <p>{{ person.text|linebreaks }}</p>
+    </div>
+{% endblock %}
+

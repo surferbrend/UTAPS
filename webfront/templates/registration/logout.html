@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+
+
+
+<head>
+
+
+
+<meta http-equiv="refresh" content="3; URL='http://gator.coe.utah.edu'" />
+</head>
+
+
+{% block content %}
+
+<p class='text-align-center lead'>You have successfully logged out.</p><p class='text-align-center lead'><a href="{% url 'auth_login' %}">Login</a></p></p>
+{% endblock %}
+

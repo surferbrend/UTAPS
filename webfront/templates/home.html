@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+
+<!-- {% block head_title %}Welcome | {{ block.super }}{% endblock %} -->
+<!--
+<style>
+{% block style %}
+.navbar-static-top {
+	margin-bottom: 0px !important;
+}
+
+.jumbotron {
+	background-color:#0F0E0E;
+	color: #FFF;
+}
+
+{% endblock %}
+</style> -->
+
+
+{% block jumbotron %}
+  {% if not request.user.is_authenticated %}
+  <div class="jumbotron" style="background-image: url('http://surferbrend.pythonanywhere.com/static/admin/img/pyd.png'); background-size: 100% 100%;">
+
+
+
+  	
+  	<div class ="w3-center">
+        <div class ="w3-row">
+    <div class ='w3-full' >
+    <h1 color="black">UTAPS-CDI</h1>
+    <p font size ="12">Utah Transportation &amp; Public Safety Crash Data Initiative. </p>
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
+
+
+    <br></br>
+    <br></br>
+
+
+
+</div>
+</div>
+</div>
+</div>
+{% endif %}
+{% endblock %}
+
+
+{% block content %}
+{% if request.user.is_authenticated %}
+<meta http-equiv="refresh" content="0; URL='/accounts/profile'" />
+<!-- {% if queryset %}
+<h2>Welcome Staff</h2>
+<table class='table'> -->
+<!-- {% for instance in queryset %}
+<tr><td>{{ forloop.counter }}</td><td>{{ instance.email }}</td><td>{{ instance.full_name }}</td><td>{{ instance.timestamp|timesince }} ago</td></tr>
+{% if instance.email == "abc@gmail.edu" %}
+<tr><td>is equal</td></tr>
+{% endif %}
+{% endfor %}
+</table>
+
+{% endif %} -->
+
+{% else %}
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://surferbrend.pythonanywhere.com/static/admin/css/w3.css">
+
+<style>
+
+img {
+-webkit-filter: grayscale(80%); /* Chrome, Safari, Opera */
+filter: grayscale(20%);
+}
+
+
+</style>
+
+<div class="w3-center">
+<div class='w3-row'>
+<div class="w3-third"><a href="http://www.udot.utah.gov/main/f?p=100:6:0::::V,T:,1" target="_blank"><img src="http://surferbrend.pythonanywhere.com/static/admin/img/udot 2-2.png" class='img-resposive'/></a></div>
+<div class="w3-third"><a href="http://utah.edu" target="_blank"><img src="http://surferbrend.pythonanywhere.com/static/admin/img/UofU-logo-2.png" class='img-resposive'/></a></div>
+
+<div class="w3-third"><a href="http://publicsafety.utah.gov/" target="_blank"><img src="http://surferbrend.pythonanywhere.com/static/admin/img/header-dps-logo-2.png" class='img-resposive'/></a></div></div></div>
+
+<br></br>
+<br></br>
+
+
+
+<div class="w3-center">
+  <div class='w3-row'>
+
+
+
+
+<tr><td><i class="fa fa-exclamation-triangle"></i></td><td><p class="btn" href"" role="button">Authentication Requirements</p></td><br>
+<tr><td><i class="fa fa-lock"></i></td><td><p class="btn" href"" role="button">Security Policy</p></td><br>
+<tr><td><i class="fa fa-gavel"></i></td><td><p class="btn" href"" role="button">User Agreement</p></td><br>
+<tr><td><i class="fa fa-database"></i></td><td><p class="btn" href"" role="button">Data Request</p></td><br>
+<tr><td><i class="fa fa-archive"></i></td><td><p class="btn" href"" role="button">Service Catalog</p></td></tr>
+
+</div>
+
+<br></br>
+<br></br>
+
+<div class="w3-center">
+  <div class='w3-row'>
+
+<p class='lead'>Follow us on Social Media </p>
+
+<a class="btn " href="https://twitter.com" role="button"><i class="fa fa-twitter-square fa-3x"></i></a>
+<a class="btn " href="https://facebook.com" role="button"><i class="fa fa-facebook-official fa-3x"></i></a>
+<a class="btn " href="https://instagram.com" role="button"><i  class="fa fa-instagram fa-3x"></i></a>
+
+
+</div>
+
+
+{% endif %}
+
+
+
+
+{% endblock %}
+

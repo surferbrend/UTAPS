@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+{% load rest_framework %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% include 'head_css.html' %}
+{% include 'javascript.html' %}
+<head>
+<title>UCF</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<script src = "{% static "js/jquery-2.2.0.min.js" %}"></script>
+<script src="{% static "js/ajax.js" %}"></script>
+<link href='https://fonts.googleapis.com/css?family=RobotoDraft' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css"><style>
+html,body,h1,h2,h3,h4,h5 {font-family: "RobotoDraft","Roboto",sans-serif;}
+.w3-sidenav a {padding:16px;font-weight:bold}
+
+.center {
+   margin: auto;
+   width: 10%;
+   padding: 0px;
+}
+
+.left {
+    position: absolute;
+    left: 0px;
+    width: 10%;
+    padding: 0px;
+}
+.right {
+    position: absolute;
+    right: 10px;
+    width: 10%;
+    padding: 0px;
+}
+
+
+.right1 {
+    position: absolute;
+    right: 100px;
+    width: 10%;
+    padding: 0px;
+}
+
+.fit {
+
+
+   display: block;
+
+   border: none;
+   overflow:hidden;
+   width: 100%;
+   height:350px;
+}
+
+
+iframe { 
+   display: block;
+   border: none;
+   overflow:hidden;   
+   width: 100%;
+    
+}   
+  
+
+span{
+   display: inline-block
+   position: relative;
+}
+img {
+   max-width:560px;
+   max-height:470px;
+   width:auto;
+   height:auto;
+}
+
+</style></head>
+<body>
+
+
+  
+<ul class="w3-navbar w3-black">
+    <li><a href='/profile/' onclick="openPage('Home')"><strong>UTAPS</strong></a></li>
+</ul>
+
+
+<iframe class="fit" seamless="seamless", overflow:scroll; src='https://gator.coe.utah.edu/uc/new' frameborder="0" allowfullscreen></iframe>
+
+
+<div id="r" style="width: 100%">
+
+
+<a id="button1"><button>Add Vehicle  Record</button></a>
+
+
+<iframe width="100%" src='https://gator.coe.utah.edu/uv/new' frameborder="0" allowfullscreen onClick="window.location.reload(true)"></iframe></div>
+
+<div id="r1" style="width: 100% style='height: 100vh;'; overflow-x:hidden;">
+
+
+<a id="button"><button onclick="myFunction()">Add Person Record</button></a>
+
+<iframe width="100%"  src='https://gator.coe.utah.edu/up/new' frameborder="0" allowfullscreen onClick="window.location.reload(true)" ></iframe></div>
+
+<footer class="w3-container w3-black">
+<h5><p align='center'>Utah Transportation and Public Safety - Crash Data Initiative</p>
+</h5>
+</footer>
+
+<div class="w3-row-padding">
+<div class="right"><img src='{% static "img/udot 2-2.png" %}' class='img-resposive'/></div>
+<div class="left"><img src='{% static "img/zero-2.jpg" %}' class='img-resposive'/></div>
+<div class="center"><img src='{% static "img/header-dps-logo.png" %}' class='img-resposive'/></div>
+
+</div>
+
+
+</body>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+   $("#button").click(function() {
+   $("<iframe />", { src: "https://gator.coe.utah.edu/up/new" }).appendTo("#r1");
+});
+   $("#button1").click(function() {
+   $("<iframe />", { src: "https://gator.coe.utah.edu/uv/new" }).appendTo("#r");
+
+});
+});
+
+
+</script>
+<script>
+
+
+      
+
+
+
+
+</script>
+<div id="iframeHolder" style="width: 100%; height: 100vh overflow-x:hidden;">
+</div>
+</html>

@@ -1,0 +1,73 @@
+
+{% load crispy_forms_tags %}
+<head>
+  <title>Checkout Record</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+    {% include 'head_css.html' %}
+    {% include 'navbar.html' %}
+
+
+<body>
+
+<div class="col-sm-12 container">
+
+<form class="form-inline" method="post" action=''><input type='hidden' name='csrfmiddlewaretoken' value='DlBoh5EcbFn8d3ldIPyhQ0y0ox1pjDnT' />{% csrf_token %}
+
+<div id="div_id_PS_case" class="form-group"> <label for="id_PS_case" class="control-label  requiredField">
+                PS case<span class="asteriskField">*</span> </label> <div class="controls "> <input class="numberinput form-control" id="id_PS_case" max="9223372036854775807" min="-9223372036854775808" name="PS_case" type="number" value="{{data}}" /> </div> </div>
+
+<div id="div_id_Checkout" class="form-group"> <label for="id_Checkout" class="control-label ">
+               Check Out Crash Record
+            </label> <div class="controls "> <select class="nullbooleanselect form-control" id="id_Checkout" name="Checkout" >
+
+{% if instance.Checkout == True %}
+<option value="1">No</option>
+<option value="2">Yes</option>
+{% else %}
+<option value="2">Yes</option>
+<option value="1">No</option>
+{% endif %}
+
+</select> </div> </div>
+
+
+<input class='btn btn-default' type='submit' value ='Submit' />
+
+</form>  
+    
+
+
+
+</div>
+<br />
+<br />
+<p class="text-danger"><h3>To view or edit a record, please proceed using the checkout button above.</h3></p> 
+
+
+
+</script>  
+
+<style>
+tr {
+  background: #fff;
+  color: #000000;
+}
+tr:hover {
+     background: #f5f5f5;
+     cursor: pointer;
+}
+tr:active {
+     background: #808080;
+     cursor: pointer;
+}
+
+</style>
+
+
+
+

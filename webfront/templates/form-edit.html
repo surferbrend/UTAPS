@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+{% include 'head_css.html' %}
+
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+<form class="form-inline" method="post" action=''>{% csrf_token %}
+{{form|crispy}}
+<input class='btn btn-default' onclick="alert('Changes have been submitted')" type='submit' value ='Submit' />
+</form>
+
+</html>
+

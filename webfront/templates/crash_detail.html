@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+
+
+    <div class="post">
+        {% if crash.published_date %}
+            <div class="date">
+                {{ crash.published_date }}
+            </div>
+        {% endif %}
+        <a class="btn btn-default" href="{% url 'crash_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+        <h1>CASE #{{ crash.PS_case }}</h1>
+        <p>{{ crash.text|linebreaks }}</p>
+    </div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+<ul class="nav navbar-nav navbar-right">
+  <li><a href="{% url 'auth_logout' %}">Logout</a></li>
+</ul>
+
+{% block content %}
+
+
+<div class="well well-lg">
+<h1><center><strong>400 ERROR</strong></center></h1>
+<h2>Wrong Turn! Please check url this one is bad.</h2>
+</div>
+
+<style>
+body {
+    background-image: url("http://surferbrend.pythonanywhere.com/static/admin/img/error/400.png");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+</style>
+
+{% endblock %}
