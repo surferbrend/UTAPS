@@ -47,8 +47,8 @@ EMAIL_USE_TLS = True
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True #False  
-TEMPLATES_DEBUG =True  # False 
+DEBUG = False  
+TEMPLATES_DEBUG = False 
 
 
 #ALLOWED_HOSTS = ['*',u'surferbrend.pythonanywhere.com']
