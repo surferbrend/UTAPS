@@ -21,18 +21,18 @@ DUO_LOGIN_URL = '/duo_login'
 # Duo configuration.
 
 
-DUO_IKEY = 'DIZ3DCQ48497DR59CVAJ'
-DUO_SKEY = 'Ev7cKnX8gTzswo3upgYF2ONA25EpeFqhctMRx68n'
-DUO_AKEY = '1d6acb7b7c612f9bd168b06135d86b1db6f9ab75'
-DUO_HOST = 'api-4aaad112.duosecurity.com'
+DUO_IKEY = ''
+DUO_SKEY = ''
+DUO_AKEY = ''
+DUO_HOST = ''
 
 
 ALLOWED_HOSTS = ['*','utah.edu']
 REGISTRATION_EMAIL_HTML = False
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.utah.edu'
-EMAIL_HOST_USER = 'utaps@utah.edu'
-EMAIL_HOST_PASSWORD = "Surferbrend!"
+EMAIL_HOST = ''
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ""
 EMAIL_PORT = 25
 EMAIL_USE_TLS = True
 
@@ -164,41 +164,6 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'sql_server.pyodbc',
-#        'NAME': 'UTAPS',
-#        'HOST': 'TEST.UTAPS.UTAH.EDU',
-#        'PORT': '1433',
-#        'USER':'remoteUser',
-#            'PASSWORD':'This!is!aT&$T',
-#            'OPTIONS': {
-#            'host_is_server': True,
-#            'use_legacy_datetime': True,
-#    },
-#  }
-#}
-
-
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'sql_server.pyodbc',
-        'NAME': 'UTAPS',
-        'HOST': 'TEST.UTAPS.UTAH.EDU',
-        'PORT': '5515',
-        'USER':'remoteTester',
-            'PASSWORD':'SuperMagic@nT$',
-            'OPTIONS': {
-            'host_is_server': True,
-            'use_legacy_datetime': True,
-    },
-  }
-}
-
-
-
 #DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.sqlite3',
@@ -208,7 +173,7 @@ DATABASES = {
 
 
 os.environ['TDSVER'] = '8.0'
-SECRET_KEY = '9(pql8^m-1#f_q&5gp$2)w5!e*$ogy^j3v!v7=*m)ta@2e1!2i'
+SECRET_KEY = ''
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
