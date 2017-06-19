@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 12px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myUL {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#myUL li a {
+  border: 1px solid #ddd;
+  margin-top: -1px; /* Prevent double borders */
+  background-color: #f6f6f6;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
+  display: block
+}
+
+#myUL li a.header {
+  background-color: #e2e2e2;
+  cursor: default;
+}
+
+#myUL li a:hover:not(.header) {
+  background-color: #eee;
+}
+</style>
+</head>
+<body>
+
+<h2>Audit Tables</h2>
+
+<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+
+<ul id="myUL">
+  <li><a href="" class="header">Crash Records</a></li>
+  <li><a href='#'><table><thead><th>Analyst</th><th>PS Case</th><th>Updated Date</th><th>Updated Fields</th></thead></table></a></li>
+
+{% if queryset %}
+  {% for instance in queryset %}
+
+  <li><a href="#" ><td>  {{instance.user_id}}</td><td> {{instance.PS_case}}</td><td> {{instance.UpdatedTime}}</td><td>:</td>
+
+{% if instance.Date_of_Crash_OLD != instance.Date_of_Crash %}
+<td> Date of Crash</td>
+{% endif %}
+
+{% if instance.County_Code_OLD != instance.County_Code %}
+<td> County Code</td>
+{% endif %}
+
+{% if instance.Exit_Number_OLD != instance.Exit_Number %}
+<td> Exit Number</td>
+{% endif %}
+
+{% if instance.Ramp_ID_OLD != instance.Ramp_ID %}
+<td> Distance</td>
+{% endif %}
+
+{% if instance.Crash_Severity_OLD != instance.Crash_Severity %}
+<td> Crash Severity</td>
+{% endif %}
+
+{% if instance.Nearest_City_OLD != instance.Nearest_City %}
+<td> Nearest City</td>
+{% endif %}
+
+{% if instance.Distance_OLD != instance.Distance %}
+<td> Distance</td>
+{% endif %}
+
+{% if instance.Manner_Collision_OLD != instance.Manner_Collision %}
+<td> Manner of Collision</td>
+{% endif %}
+
+{% if instance.Main_Road_Name_OLD != instance.Main_Road_Name %}
+<td> Main Road Name</td>
+{% endif %}
+
+{% if instance.Road_Junction_Feature_OLD != instance.Road_Junction_Feature %}
+<td> Road Junction Feature</td>
+{% endif %}
+
+{% if instance.At_Intersection_With_OLD != instance.At_Intersection_With %}
+<td> At Interestion With</td>
+{% endif %}
+
+{% if instance.First_Harmful_Event_OLD != instance.First_Harmful_Event %}
+<td> First Harmful Event</td>
+{% endif %}
+
+{% if instance.Not_At_Intersection_Distance_OLD != instance.Not_At_Intersection_Distance %}
+<td> Not At Intersection Distance</td>
+{% endif %}
+
+{% if instance.Nearest_Intersection_OLD != instance.Nearest_Intersection %}
+<td> Nearest Intersection</td>
+{% endif %}
+
+{% if instance.Ref_Post_Distance_OLD != instance.Ref_Post_Distance %}
+<td> Ref Post Distance</td>
+{% endif %}
+
+{% if instance.Ref_Post_Direction_OLD != instance.Ref_Post_Direction %}
+<td> Ref Post Direction</td>
+{% endif %}
+
+{% if instance.Ref_Post_Description_OLD != instance.Ref_Post_Description %}
+<td> Ref Post Description</td>
+{% endif %}
+
+{% if instance.Work_Zone_Related_OLD != instance.Work_Zone_Related %}
+<td> Work Zone Related</td>
+{% endif %}
+
+{% if instance.Work_Zone_Worker_Present_OLD != instance.Work_Zone_Worker_Present %}
+<td> Work Zone Worker Present</td>
+{% endif %}
+
+{% if instance.Work_Zone_ID_OLD != instance.Work_Zone_ID %}
+<td> Work Zone ID</td>
+{% endif %}
+
+{% if instance.Work_Zone_Location_OLD != instance.Work_Zone_Location %}
+<td> Work Zone Location</td>
+{% endif %}
+
+{% if instance.Unconfirmed_Fatality_Report_OLD != instance.Unconfirmed_Fatality_Report %}
+<td> Unconfirmed Fatality Report</td>
+{% endif %}
+
+{% if instance.Light_Condition_OLD != instance.Light_Condition %}
+<td> Light Condition</td>
+{% endif %}
+
+{% if instance.Road_Surface_Condition_OLD != instance.Road_Surface_Condition %}
+<td> Road Surface Condition</td>
+{% endif %}
+
+{% if instance.Weather_Condition_OLD != instance.Weather_Condition %}
+<td> Weather Condition</td>
+{% endif %}
+</a></li>
+  {% endfor %}
+{% endif %}
+
+
+
+  <li><a href="#" class="header">B</a></li>
+  <li><a href="#">Billy</a></li>
+  <li><a href="#">Bob</a></li>
+
+  <li><a href="#" class="header">C</a></li>
+  <li><a href="#">Calvin</a></li>
+  <li><a href="#">Christina</a></li>
+  <li><a href="#">Cindy</a></li>
+</ul>
+
+<script>
+function myFunction() {
+    var input, filter, ul, li, a, i;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("myUL");
+    li = ul.getElementsByTagName("li");
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+
+        }
+    }
+}
+</script>
+
+</body>
+</html>
+
+

@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
    
   $.ajax({
     type: 'GET',
-    url: 'https://gator.coe.utah.edu/api/r/?format=json',
+    url: 'http://cdi-utaps.test.utah.edu/api/r/?format=json',
     success: function(orders) {
 
 				
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   };
 
  
-  $.getJSON('https://gator.coe.utah.edu/api/r/?Assigned_Crash_Record=3&format=json',
+  $.getJSON('http://cdi-utaps.test.utah.edu/api/r/?Assigned_Crash_Record=3&format=json',
             function (data) {                
 
     
@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   processingComplete();
 
   $('tbody').on('click', '.fila_art' ,function(){
-      window.open("https://gator.coe.utah.edu/uc/" + $(this).children().eq(0).text() + "/edit");
+      window.open("http://cdi-utaps.test.utah.edu/uc/" + $(this).children().eq(0).text() + "/edit");
   });
 
 

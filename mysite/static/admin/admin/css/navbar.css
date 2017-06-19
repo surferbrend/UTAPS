@@ -1,0 +1,23 @@
+body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.navbar {
+  margin-bottom: 20px;
+  background-color: #0F0F0E;
+}
+
+.navbar-collapse {
+  margin-bottom: 20px;
+  background-color: #0F0F0E;
+  border-color:#FFF;
+}
+
+.navbar-default .navbar-brand {
+  color: #FFF;
+}
+
+.navbar-defualt .navbar-brand:hover {
+  color: #FFF;
+}

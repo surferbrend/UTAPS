@@ -1,3 +1,4 @@
+from webfront import duo_auth
 from django.shortcuts import render
 from django import template
 from django.conf import settings
@@ -9,9 +10,9 @@ from django.template.context_processors import csrf
 from django.views.decorators.csrf import csrf_protect
 from django.core import serializers
 from django.core.urlresolvers import reverse
-from .forms import ContactForm, SignUpForm, Vehicle, Person, MC, MV, MP, ucForm ,upForm, uvForm, uc, Check, V, cap
+from .forms import ContactForm, SignUpForm, Vehicle, Person, MC, MV, MP, ucForm ,upForm, uvForm, uc, Check, V, cap, CC, CV, CP
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from .models import SignUp, Vehicle, Person, Locate, Crash, uc, uv, up
+from .models import SignUp, Vehicle, Person, Locate, Crash, uc, uv, up,conflict_crash, conflict_vehicle, conflict_person, CrashAudit, VehicleAudit, PersonAudit
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from rest_framework import permissions, renderers, viewsets, generics, filters, status
 from rest_framework.decorators import detail_route, api_view
@@ -59,35 +60,52 @@ def contact(request):
                 to_email,
                 fail_silently=True)
         context ={
-                "form": form,
-                "title": title,
-                "title_align_center": title_align_center,
-                }
+        "form": form,
+        "title": title,
+        "title_align_center": title_align_center,
+         }
         return render(request, "forms.html", context)
 
 
+
+logging.info("From the views.py connection");
 @login_required
-#@duo_auth.duo_auth_required
+@duo_auth.duo_auth_required
+def duo(request):
+    """
+    View which requires a login and Duo authentication.
+    """
+    return HttpResponse('Content protected by Django and Duo auth.')
+
+@login_required
+def duo_private_manual(request):
+    """
+    View which requires a login, and manually checks for Duo authentication.
+    """
+    if not duo_auth.duo_authenticated(request):
+        return HttpResponseRedirect(
+            '%s?next=%s' % (settings.DUO_LOGIN_URL, request.path))
+    return HttpResponse('Content protected by Django and Duo auth.')
+
+
+
+@login_required
+@duo_auth.duo_auth_required
 def profile(request):
     return render(request, "profile.html", {})
 
 @login_required
-#@duo_auth.duo_auth_required
+@duo_auth.duo_auth_required
 def dyno(request):
     return render(request, 'dyno.html', {})
 
 @login_required
-#@duo_auth.duo_auth_required
-def full(request):
-    return render(request, 'full.html', {})
-
-@login_required
-#@duo_auth.duo_auth_required
+@duo_auth.duo_auth_required
 def u(request):
     return render(request, 'dyna.html', {})
 
 @login_required
-#@duo_auth.duo_auth_required
+@duo_auth.duo_auth_required
 def full(request):
     return render(request, 'full.html', {})
 
@@ -98,7 +116,7 @@ def crash_detail(request, pk):
     post = get_object_or_404(Crash, pk=pk)
     return render(request, 'crash_detail.html', {'post': post})
 
-#@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
+@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
 def crash_new(request):
     args = {}
     args.update(csrf(request))
@@ -115,7 +133,7 @@ def crash_new(request):
    # return render(request, 'sub1.html', {'form': form})
     return render(request, 'crash_edit.html', {'form': form})
 
-#@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
+@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
 def crash_edit(request, pk):
     args = {}
     args.update(csrf(request))
@@ -138,20 +156,20 @@ def crash_edit(request, pk):
          queryset2 = Person.objects.all().filter(PS_case__exact = data)
          queryset3 = uc.objects.all().filter(PS_case__exact = data)
          queryset4 = Locate.objects.all().filter(PS_Case_ID = data)
-#         que = Crash.objects.all().filter(Checkout__exact = 2)
+         que = Crash.objects.all().filter(Checkout__exact = 2)
          context = {
          "queryset":queryset,
          "queryset2":queryset2,
          "queryset3":queryset3,
          "queryset4":queryset4,
-#         "que":que,
+         "que":que,
          "data": data,
          "form": form
          }
     return render(request, 'crash_edit.html', context)
 
 
-#@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
+@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
 def check_new(request):
     args = {}
     args.update(csrf(request))
@@ -167,7 +185,7 @@ def check_new(request):
          form = Check()
     return render(request, 'form-edit.html', {'form': form})
 
-#@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
+@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
 def crash_check(request, pk):
     args = {}
     args.update(csrf(request))
@@ -190,7 +208,7 @@ def crash_check(request, pk):
          }
     return render(request, 'checkout.html', context)
 
-#@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
+@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
 def checkin(request, pk):
     args = {}
     args.update(csrf(request))
@@ -218,7 +236,7 @@ def person_detail(request, pk):
     post = get_object_or_404(Person, pk=pk)
     return render(request, 'person_detail.html', {'post': post})
 
-#@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
+@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
 def person_new(request):
     args = {}
     args.update(csrf(request))
@@ -234,7 +252,7 @@ def person_new(request):
         form = MP()
     return render(request, 'form-edit.html', {'form': form})
 
-#@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
+@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
 def person_edit(request, pk):
     args = {}
     args.update(csrf(request))
@@ -256,7 +274,7 @@ def vehicle_detail(request, pk):
     post = get_object_or_404(Vehicle, pk=pk)
     return render(request, 'vehicle_detail.html', {'post': post})
         
-#@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
+@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
 def vehicle_new(request):
     args = {}
     args.update(csrf(request))
@@ -272,7 +290,7 @@ def vehicle_new(request):
         form = MV()
     return render(request, 'form-edit.html', {'form': form})
 
-#@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
+@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
 def vehicle_edit(request, pk):
     args = {}
     args.update(csrf(request))
@@ -291,7 +309,7 @@ def vehicle_edit(request, pk):
 
 #UNCONFIRMED
 
-#@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
+@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
 def uc_new(request):
     args = {}
     args.update(csrf(request))
@@ -311,7 +329,7 @@ def uc_new(request):
         }
     return render(request, 'sub4.html',context)
                                                                                                                                 
-#@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
+@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
 def uc_edit(request, pk):
     args = {}
     args.update(csrf(request))
@@ -340,7 +358,7 @@ def uc_edit(request, pk):
     return render(request, 'sub.html', context)
 
 
-#@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
+@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
 def uce(request, pk):
     args = {}
     args.update(csrf(request))
@@ -366,7 +384,7 @@ def uce(request, pk):
         }
     return render(request, 'uce.html', context)
 
-#@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
+@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
 def uv_new(request):
     args = {}
     args.update(csrf(request))
@@ -380,11 +398,11 @@ def uv_new(request):
             post.published_date = timezone.now()
             post.save()
             return redirect('uv-detail', pk=aa)
-        else:
-            form = uvForm()
-        return render(request, 'sub1.html', {'form': form})
+    else:
+        form = uvForm()
+    return render(request, 'sub1.html', {'form': form})
 
-#@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
+@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
 def up_new(request):
     args = {}
     args.update(csrf(request))
@@ -398,13 +416,14 @@ def up_new(request):
             post.published_date = timezone.now()
             post.save()
             return redirect('up-detail', pk=aa)
-        else:
-            form = upForm()
-        return render(request, 'sub1.html', {'form': form})
+    else:
+        form = upForm()
+    return render(request, 'sub1.html', {'form': form})
+
 
 #GIS
 
-#@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
+@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
 def geo_new(request):
     args = {}
     args.update(csrf(request))
@@ -423,7 +442,7 @@ def geo_new(request):
         }
     return render(request, 'sub1.html', context)
 
-#@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
+@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
 def geo_edit(request, pk):
     args = {}
     args.update(csrf(request))
@@ -448,6 +467,32 @@ def geo_edit(request, pk):
         "form": form
         }
     return render(request, 'record.html', context)
+
+@user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
+def geo_rest(request, pk):
+    args = {}
+    args.update(csrf(request))
+    post = get_object_or_404(Locate, pk=pk)
+    user = request.user
+    request.session['geo']= post.pk
+    if request.method == "POST":
+       form = cap(request.POST, instance=post)
+       if form.is_valid():
+           post = form.save(commit=False)
+           post.user = request.user
+           post.published_date = timezone.now()
+           post.save()
+           return redirect('geo-rest', pk=post.pk)
+    else:
+        form = cap(instance=post)
+        data = form['PS_Case_ID'].value()
+        queryset = Locate.objects.all().filter(PS_Case_ID = data)
+        context = {
+        "queryset":queryset,
+        "data": data,
+        "form": form
+        }
+    return render(request, 'rest.html', context)
 
 
 ##REST_FRAMEWORK
@@ -527,7 +572,7 @@ class ListView(viewsets.ModelViewSet):
     queryset = Crash.objects.all()
     serializer_class = CrashSerializer
     filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('PS_Case_ID','Date_of_Crash', 'Crash_Verified','City','Main_Road_Name','Narrative','Checkout')
+    filter_fields = ('PS_Case_ID','Assigned','Date_of_Crash', 'Crash_Verified','City','Main_Road_Name','Private_Property','Narrative','Checkout')
 
 class CMVView(viewsets.ModelViewSet):
     queryset = Crash.objects.all()
@@ -537,7 +582,6 @@ class CMVView(viewsets.ModelViewSet):
 
 #@login_required
 #@duo_auth.duo_auth_required
-
 class PostListView(viewsets.ReadOnlyModelViewSet):
     queryset = Crash.objects.all()
     serializer_class = PostSerializer
@@ -545,10 +589,11 @@ class PostListView(viewsets.ReadOnlyModelViewSet):
     paginate_by = 20
     paginate_by_peram = 'page_size'
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('ID','PS_case','Road_Junction_Feature', 'Work_Zone_Related','Work_Zone_Worker_Present','Work_Zone_ID','First_Harmful_Event','Crash_Severity','Date_of_Crash','Date_of_Crash','City','Manner_Collision')
+#    filter_backends = (filters.DjangoFilterBackend,)
+    search_fields = ('ID','Assigned','PS_case','Road_Junction_Feature', 'Work_Zone_Related','Work_Zone_Worker_Present','Work_Zone_ID','First_Harmful_Event','Crash_Severity','Date_of_Crash','Date_of_Crash','City','Manner_Collision')
 
-#@login_required
-#@duo_auth.duo_auth_required
+@login_required
+@duo_auth.duo_auth_required
 class LocateViewSet(viewsets.ModelViewSet):
     queryset = Locate.objects.all()
     serializer_class = LocateSerializer
@@ -603,6 +648,62 @@ class ucfViewset(viewsets.ModelViewSet):
     filter_fields = ('ID','PS_case','Assigned_Crash_Record','DLD_Year', 'DLD', 'County_Code', 'Route', 'Date_of_Crash', 'Manner_Collision','Roadway_Contrib_Circum','Weather_Condition', 'First_Harmful_Event', 'Narrative')
 
 
+
+class ucfcrash(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'ucfcrash_detail.html'
+    def get(self, request, pk):
+        profile = get_object_or_404(uc, pk=pk)
+        serializer = UCFCSerializer(profile)
+        return Response({'serializer': serializer, 'profile': profile})
+
+    def post(self, request, pk):
+        profile = get_object_or_404(uc, pk=pk)
+        serializer = UCFCSerializer(profile, data=request.data)
+        if not serializer.is_valid():
+            return Response({'serializer': serializer, 'profile': profile})
+        serializer.save()
+        return redirect('uc-new')
+
+
+
+class ucfveh(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'uv_detail.html'
+
+    def get(self, request, pk):
+        profile = get_object_or_404(uv, pk=pk)
+        serializer = uvSerializer(profile)
+        return Response({'serializer': serializer, 'profile': profile})
+
+    def post(self, request, pk):
+        aa = request.session['del']
+        profile = get_object_or_404(uv, pk=pk)
+        serializer = uvSerializer(profile, data=request.data)
+        if not serializer.is_valid():
+            return Response({'serializer': serializer, 'profile': profile})
+        serializer.save()
+        return redirect('uc-edit',pk=aa)
+
+class ucfper(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name =  'profile_detail.html'
+
+    def get(self, request, pk):
+        profile = get_object_or_404(up, pk=pk)
+        serializer = ProfileSerializer(profile)
+        return Response({'serializer': serializer, 'profile': profile})
+
+    def post(self, request, pk):
+        aa = request.session['del']
+        profile = get_object_or_404(up, pk=pk)
+        serializer = ProfileSerializer(profile, data=request.data)
+        if not serializer.is_valid():
+            return Response({'serializer': serializer, 'profile': profile})
+        serializer.save()
+        return redirect('uc-edit',pk=aa)
+
+
 #DELETE
 
 @user_passes_test(lambda u: u.groups.filter(name= 'QC').count() == 1)
@@ -621,4 +722,185 @@ def delete_uv(request, pk):
     aa = request.session['del']
     post = get_object_or_404(uv, pk=pk).delete()
     return redirect('uc-edit', pk=aa)
+
+@user_passes_test(lambda u: u.groups.filter(name ='SPV').count() == 1)
+def delete_cc(request, pk):
+    post = get_object_or_404(conflict_crash, pk=pk).delete()
+    return redirect('conflict')
+
+@user_passes_test(lambda u: u.groups.filter(name ='SPV').count() == 1)
+def delete_cv(request, pk):
+    post = get_object_or_404(conflict_vehicle, pk=pk).delete()
+    return redirect('conflict')
+
+@user_passes_test(lambda u: u.groups.filter(name ='SPV').count() == 1)
+def delete_cp(request, pk):
+    post = get_object_or_404(conflict_person, pk=pk).delete()
+    return redirect('conflict')
+
+
+#RECONCILE
+
+@user_passes_test(lambda u: u.groups.filter(name ='SPV').count() == 1)
+def reconcile_crash(request, pk):
+    args = {}
+    args.update(csrf(request))
+    post = get_object_or_404(Crash, pk=pk)
+    if request.method == "POST":
+        form = CC(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.published_date = timezone.now()
+            post.save()
+            return redirect('reconcile_crash', pk=post.pk)
+    else:
+        form = CC(instance=post)
+    return render(request, 'form-edit.html', {'form': form})
+
+@user_passes_test(lambda u: u.groups.filter(name ='SPV').count() == 1)
+def conflicts(request):
+    queryset = conflict_crash.objects.all()
+    queryset1= conflict_vehicle.objects.all()
+    queryset2 = conflict_person.objects.all()
+    context = {
+    'queryset':queryset,
+    'queryset1':queryset1,
+    'queryset2':queryset2
+    }
+    return render(request,'conflict.html', context)
+
+@user_passes_test(lambda u: u.groups.filter(name ='SPV').count() == 1)
+def reconcile(request):
+    return redirect('reconcile.html', {})
+
+@user_passes_test(lambda u: u.groups.filter(name ='SPV').count() == 1)
+def reconcile_vehicle(request, pk):
+    args = {}
+    args.update(csrf(request))
+    post = get_object_or_404(Vehicle, pk=pk)
+    if request.method == "POST":
+        form = CV(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.published_date = timezone.now()
+            post.save()
+            return redirect('reconcile_vehicle', pk=post.pk)
+    else:
+        form = CV(instance=post)
+    return render(request, 'form-edit.html', {'form': form})
+
+@user_passes_test(lambda u: u.groups.filter(name ='SPV').count() == 1)
+def reconcile_person(request, pk):
+    args = {}
+    args.update(csrf(request))
+    post = get_object_or_404(Person, pk=pk)
+    if request.method == "POST":
+        form = CP(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.published_date = timezone.now()
+            post.save()
+            return redirect('reconcile_person', pk=post.pk)
+    else:
+        form = CP(instance=post)
+    return render(request, 'form-edit.html', {'form': form})
+
+@user_passes_test(lambda u: u.groups.filter(name ='SPV').count() == 1)
+def cc(request, pk):
+    queryset = get_object_or_404(conflict_crash, pk=pk)
+    queryset1 = Crash.objects.all().filter(PS_case__exact = queryset.PS_case)
+    request.session['con']= queryset.pk
+    context = {
+    "queryset":queryset,
+    "queryset1":queryset1
+    }
+    return render(request, 'conflict_crash.html', context)
+
+@user_passes_test(lambda u: u.groups.filter(name ='SPV').count() == 1)
+def cv(request, pk):
+    queryset = get_object_or_404(conflict_vehicle, pk=pk)
+    queryset1 = Vehicle.objects.all().filter(PS_case__exact = queryset.PS_case)
+    request.session['vcon']= queryset.pk
+    context = {
+    "queryset":queryset,
+    "queryset1":queryset1
+    }
+    return render(request, 'conflict_vehicle.html',context)
+
+
+@user_passes_test(lambda u: u.groups.filter(name ='SPV').count() == 1)
+def cp(request, pk):
+    queryset = get_object_or_404(conflict_person, pk=pk)
+    queryset1 = Person.objects.all().filter(PS_case__exact = queryset.PS_case)
+    request.session['pcon']= queryset.pk
+    context = {
+    "queryset":queryset,
+    "queryset1":queryset1
+    }
+    return render(request, 'conflict_person.html',context)
+
+#AUDIT
+@user_passes_test(lambda u: u.groups.filter(name ='SPV').count() == 1)
+def crash_audit(request):
+    posts = CrashAudit.objects.all().order_by('UpdatedTime')
+    return render(request,'auditcrash.html', {'posts': posts})
+
+@user_passes_test(lambda u: u.groups.filter(name ='SPV').count() == 1)
+def vehicle_audit(request):
+    posts = VehicleAudit.objects.all().order_by('UpdatedTime')
+    return render(request,'auditvehicle.html', {'posts': posts})
+
+@user_passes_test(lambda u: u.groups.filter(name ='SPV').count() == 1)
+def person_audit(request):
+    posts = PersonAudit.objects.all().order_by('UpdatedTime')
+    return render(request,'auditperson.html', {'posts': posts})
+
+@user_passes_test(lambda u: u.groups.filter(name ='SPV').count() == 1)
+def chore(request):
+    queryset = CrashAudit.objects.all().order_by('UpdatedTime')
+    return render(request,'chore.html', {'queryset':queryset})
+
+@user_passes_test(lambda u: u.groups.filter(name ='SPV').count() == 1)
+def audit(request):
+    queryset = CrashAudit.objects.all().order_by('UpdatedTime')
+    queryset1= VehicleAudit.objects.all().order_by('UpdatedTime')
+    queryset2 = PersonAudit.objects.all().order_by('UpdatedTime')
+    context = {
+    'queryset':queryset,
+    'queryset1':queryset1,
+    'queryset2':queryset2
+    }   
+
+    return render(request,'chordaudit.html', context)
+
+@user_passes_test(lambda u: u.groups.filter(name ='SPV').count() == 1)
+def ca(request, pk):
+    queryset = get_object_or_404(CrashAudit, pk=pk)
+    return render(request, 'auditcrashd.html',{'queryset':queryset})
+
+@user_passes_test(lambda u: u.groups.filter(name ='SPV').count() == 1)
+def va(request, pk):
+    queryset = get_object_or_404(VehicleAudit, pk=pk)
+    return render(request, 'auditvehicled.html',{'queryset':queryset})
+
+@user_passes_test(lambda u: u.groups.filter(name ='SPV').count() == 1)
+def pa(request, pk):
+    queryset = get_object_or_404(PersonAudit, pk=pk)
+    return render(request, 'auditpersond.html',{'queryset':queryset})
+
+def auditframe(request):
+    queryset = CrashAudit.objects.all().order_by('UpdatedTime')
+    queryset1= VehicleAudit.objects.all().order_by('UpdatedTime')
+    queryset2 = PersonAudit.objects.all().order_by('UpdatedTime')
+    context = {
+    'queryset':queryset,
+    'queryset1':queryset1,
+    'queryset2':queryset2
+    }
+
+    return render(request, "audit.html", context)
+
 

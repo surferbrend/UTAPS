@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %}
+{% include 'head_css.html' %}
+{% include 'navbar.html' %}
+  <title>Audit Person Table {{queryset.PS_case}}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+* {
+    box-sizing: border-box;
+}
+
+.columns {
+    float: left;
+    width: 33.3%;
+    padding: 8px;
+}
+
+@media only screen and (max-width: 600px) {
+    .columns {
+        width: 100%;
+    }
+}
+
+div.panel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.6s ease-in-out;
+    opacity: 0;
+}
+
+div.panel.show {
+    opacity: 1;
+    max-height: 500px;
+}
+
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 12px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myUL {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#myUL li a {
+  border: 1px solid #ddd;
+  margin-top: -1px; /* Prevent double borders */
+  background-color: #f6f6f6;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
+  display: block
+}
+
+#myUL li a.header {
+  background-color: #e2e2e2;
+  cursor: default;
+}
+
+#myUL li a:hover:not(.header) {
+  background-color: #eee;
+
+
+table, td, th {
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 15px;
+}
+
+</style>
+
+
+<body>
+
+
+<div class="col-sm-8">
+
+      <div class="well">
+        <h4>Audit Person Records</h4>
+        <iframe src="/auditframe/" height="1000" width="1200"></iframe>
+
+      </div>
+
+</div>
+
+    
+<div class="columns">
+      <div class="well">
+
+  <h1>Audit Person Record {{queryset.PS_case}}</h1>
+  
+
+
+
+
+<table><tr><p>Public Safety Case #<p></tr><tr><p><strong>{{queryset.PS_case}}</strong></p></tr><tr><p>Old Analyst:</p></tr><tr><p><strong>{{queryset.user_id_OLD}}</strong></p></tr>
+<tr>Analyst:</tr><tr><p>
+<strong>{{queryset.user_id}}</strong></p></tr>
+<tr><p>Updated Time</p></tr>
+<tr><p><strong>{{queryset.UpdatedTime}} </strong></p></tr> 
+
+{% if queryset.Name_Last_OLD != queryset.Name_Last %}
+<tr><p>Old Last Name</p></tr>
+<tr><p><strong>{{queryset.Name_Last_OLD}}</strong></p></tr>
+<tr><p>Last Name</p></tr>
+<tr><p><strong>{{queryset.Name_Last}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Name_First_OLD != queryset.Name_First %}
+<tr><p>Old First Name</p></tr>
+<tr><p><strong>{{queryset.Name_First_OLD}}</strong></p></tr>
+<tr><p>First Name</p></tr>
+<tr><p><strong>{{queryset.Name_First}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Name_Middle_OLD != queryset.Name_Middle %}
+<tr><p>Old Middle Name</p></tr>
+<tr><p><strong>{{queryset.Name_Middle_OLD}}</strong></p></tr>
+<tr><p>Middle Name</p></tr>
+<tr><p><strong>{{queryset.Name_Middle}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Sex_OLD != queryset.Sex %}
+<tr><p>Old Sex</p></tr>
+<tr><p><strong>{{queryset.Sex_OLD}}</strong></p></tr>
+<tr><p>Sex</p></tr>
+<tr><p><strong>{{queryset.Sex}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Date_Of_Birth_OLD != queryset.Date_Of_Birth %}
+<tr><p>Old Date of Birth</p></tr>
+<tr><p><strong>{{queryset.Date_Of_Birth_OLD}}</strong></p></tr>
+<tr><p>Date of Birth</p></tr>
+<tr><p><strong>{{queryset.Date_Of_Birth}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Age_OLD != queryset.Age %}
+<tr><p>Old Age</p></tr>
+<tr><p><strong>{{queryset.Age_OLD}}</strong></p></tr>
+<tr><p>Age</p></tr>
+<tr><p><strong>{{queryset.Age}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Address_Street_OLD != queryset.Address_Street %}
+<tr><p>Old Address Street</p></tr>
+<tr><p><strong>{{queryset.Address_Street_OLD}}</strong></p></tr>
+<tr><p>Address Street</p></tr>
+<tr><p><strong>{{queryset.Address_Street}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Address_Street2_OLD != queryset.Address_Street2 %}
+<tr><p>Old Address Street (Continued)</p></tr>
+<tr><p><strong>{{queryset.Address_Street2_OLD}}</strong></p></tr>
+<tr><p>Address Street (Continued)</p></tr>
+<tr><p><strong>{{queryset.Address_Street2}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Address_City_OLD != queryset.Address_City %}
+<tr><p>Old Address City</p></tr>
+<tr><p><strong>{{queryset.Address_City_OLD}}</strong></p></tr>
+<tr><p>Address City</p></tr>
+<tr><p><strong>{{queryset.Address_City}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Address_State_OLD != queryset.Address_State %}
+<tr><p>Old Address State</p></tr>
+<tr><p><strong>{{queryset.Address_State_OLD}}</strong></p></tr>
+<tr><p>Address State</p></tr>
+<tr><p><strong>{{queryset.Address_State}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Address_Zip_OLD != queryset.Address_Zip %}
+<tr><p>Old Address Zip</p></tr>
+<tr><p><strong>{{queryset.Address_Zip_OLD}}</strong></p></tr>
+<tr><p>Address Zip</p></tr>
+<tr><p><strong>{{queryset.Address_Zip}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Address_County_OLD != queryset.Address_County %}
+<tr><p>Old Address County</p></tr>
+<tr><p><strong>{{queryset.Address_County_OLD}}</strong></p></tr>
+<tr><p>Address County</p></tr>
+<tr><p><strong>{{queryset.Address_County}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Phone_OLD != queryset.Phone %}
+<tr><p>Old Phone #</p></tr>
+<tr><p><strong>{{queryset.Phone_OLD}}</strong></p></tr>
+<tr><p>Phone #</p></tr>
+<tr><p><strong>{{queryset.Phone}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Dl_Number_OLD != queryset.Dl_Number %}
+<tr><p>Old Driver License #</p></tr>
+<tr><p><strong>{{queryset.Dl_Number_OLD}}</strong></p></tr>
+<tr><p>Driver License #</p></tr>
+<tr><p><strong>{{queryset.Dl_Number}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Dl_State_OLD != queryset.Dl_State %}
+<tr><p>Old Driver License State</p></tr>
+<tr><p><strong>{{queryset.Dl_State_OLD}}</strong></p></tr>
+<tr><p>Driver License State</p></tr>
+<tr><p><strong>{{queryset.Dl_State}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Dl_Class_OLD != queryset.Dl_Class %}
+<tr><p>Old Driver License Class</p></tr>
+<tr><p><strong>{{queryset.Dl_Class_OLD}}</strong></p></tr>
+<tr><p>Driver License Class</p></tr>
+<tr><p><strong>{{queryset.Dl_Class}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.CDL_Presented_At_Scene_OLD != queryset.CDL_Presented_At_Scene %}
+<tr><p>Old CDL Presented At Scene</p></tr>
+<tr><p><strong>{{queryset.CDL_Presented_At_Scene_OLD}}</strong></p></tr>
+<tr><p>CDL Presented At Scene</p></tr>
+<tr><p><strong>{{queryset.CDL_Presented_At_Scene}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Injury_Level_OLD != queryset.Injury_Level %}
+<tr><p>Old Injury Level</p></tr>
+<tr><p><strong>{{queryset.Injury_Level_OLD}}</strong></p></tr>
+<tr><p>Injury Level</p></tr>
+<tr><p><strong>{{queryset.Injury_Level}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Charge_OLD != queryset.Charge %}
+<tr><p>Old Charge</p></tr>
+<tr><p><strong>{{queryset.Charge_OLD}}</strong></p></tr>
+<tr><p>Charge</p></tr>
+<tr><p><strong>{{queryset.Charge}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Status_Code_OLD != queryset.Status_Code %}
+<tr><p>Old Status Code</p></tr>
+<tr><p><strong>{{queryset.Status_Code_OLD}}</strong></p></tr>
+<tr><p>Status Code</p></tr>
+<tr><p><strong>{{queryset.Status_Code}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Person_Type_OLD != queryset.Person_Type %}
+<tr><p>Old Person Type</p></tr>
+<tr><p><strong>{{queryset.Person_Type_OLD}}</strong></p></tr>
+<tr><p>Person Type</p></tr>
+<tr><p><strong>{{queryset.Person_Type}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Vehicle_Number_OLD != queryset.Vehicle_Number %}
+<tr><p>Old Vehicle_Number</p></tr>
+<tr><p><strong>{{queryset.Vehicle_Number_OLD}}</strong></p></tr>
+<tr><p>Vehicle_Number</p></tr>
+<tr><p><strong>{{queryset.Vehicle_Number}}</strong></p></tr>
+{% endif %}
+
+
+</body>
+</html>

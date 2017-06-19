@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+{% load staticfiles %}
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body { font-family:'Roboto'; background-color:#f7f7f7;}
+.container { margin:150px auto 30px auto;}
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+</style>
+<script src="{% static "js/jquery-2.2.0.min.js" %}"></script>
+<script src="{% static "js/table2csv.js" %}"></script>
+</head>
+<body>
+<div id="jquery-script-menu">
+<div class="jquery-script-center">
+<div class="jquery-script-clear"></div>
+</div>
+</div>
+<div class="container">
+<table id="tab" class="table table-bordered table-striped">
+  <thead class="w3-black"><th style="width:30%">Analyst</th><th>PS Case</th><th>Case Number</th><th>Updated</th><th>Date of Crash OLD</th><th>Date of Crash</th><th>County Code OLD</th><th>County Code</th><th>Exit Number OLD
+</th><th>Exit Number</th><th>Ramp ID OLD</th><th>Ramp ID</th><th>Crash Severity OLD</th><th>Crash Severity</th><th>Nearest City OLD</th><th>Nearest City</th><th>Distance OLD</th><th>Distance</th><th>Manner Collision OLD
+</th><th>Manner Collision</th><th>Main Road Name OLD</th><th>Main Road Name</th><th>Road Junction Feature OLD</th><th>Road Junction Feature</th><th>At Intersection With OLD</th><th>At Intersection With</th><th>First Harmful Event OLD
+</th><th>First Harmful Event</th><th>Not at Intersection Distance OLD</th><th>Not at Intersection Distance</th><th>Nearest Intersection OLD</th><th>Nearest Intersection</th><th>Ref Post Distance OLD
+</th><th>Ref Post Distance</th><th>Ref Post Direction OLD</th><th>Ref Post Direction</th><th>Ref Post Description OLD</th><th>Ref Post Description</th><th>Work Zone Related OLD</th><th>Work Zone Related
+</th><th>Work Zone Worker Present OLD</th><th>Work Zone Worker Present</th><th>Work Zone ID OLD</th><th>Work Zone ID</th><th>Work Zone Location OLD</th><th>Work Zone Location</th><th>Unconfirmed Fatality Report OLD
+</th><th>Unconfirmed Fatality Report</th><th>Light Condition OLD</th><th>Light Condition</th><th>Road Surface Condition OLD</th><th>Road Surface Condition</th><th>Weather Condition OLD</th><th>Weather Condition</th></thead>
+ {% for post in posts %}
+     <tr><td>{{ post.user_id }}</td><td>
+       {{post.PS_case}}</td><td>{{post.Case_Number}}</td><td>{{post.UpdatedTime}}</td><td> {{post.Date_of_Crash_OLD}}</td><td>{{post.Date_of_Crash}}</td><td>{{ post.County_Code_OLD}}</td><td>{{post.County_Code}}
+       </td><td>{{post.Exit_Number_OLD}}</td><td>{{post.Exit_Number}}</td><td>{{post.Ramp_ID_OLD}}</td><td>{{post.Ramp_ID}}</td><td>{{post.Crash_Severity_OLD}}</td><td>{{post.Crash_Severity}}</td><td>{{post.Nearest_City_OLD}}
+       </td><td>{{post.Nearest_City}}</td><td>{{post.Distance_OLD}}</td><td>{{post.Distance}}</td><td>{{post.Manner_Collision_OLD}}</td><td>{{post.Manner_Collision}}</td><td>{{post.Main_Road_Name_OLD}}</td><td>{{post.Main_Road_Name}}
+       </td><td>{{post.Road_Junction_Feature_OLD}}</td><td>{{post.Road_Junction_Feature}}</td><td>{{post.At_Intersection_With_OLD}}</td><td>{{post.At_Intersection_With}}</td><td>{{post.First_Harmful_Event_OLD}}</td><td>
+       </td><td>{{post.First_Harmful_Event}}</td><td>{{post.Not_at_Intersection_Distance_OLD}}</td><td>{{post.Not_at_Intersection_Distance}}</td><td>{{post.Nearest_Intersection_OLD}}</td><td>
+       {{post.Nearest_Intersection}}</td><td>{{post.Ref_Post_Distance_OLD}}</td><td>{{post.Ref_Post_Distance}}</td><td>{{post.Ref_Post_Direction_OLD}}</td><td>{{post.Ref_Post_Direction}}
+       </td><td>{{post.Ref_Post_Description_OLD}}</td><td>{{post.Ref_Post_Description}}</td><td>{{post.Work_Zone_Related_OLD}}</td><td>{{post.Work_Zone_Related}}</td><td>{{post.Work_Zone_Worker_Present_OLD}}</td><td>
+       {{post.Work_Zone_Worker_Present}}</td><td>{{post.Work_Zone_ID_OLD}}</td><td>{{post.Work_Zone_ID}}</td><td>{{post.Work_Zone_Location_OLD}}</td><td>{{post.Work_Zone_Location}}</td><td>{{post.Unconfirmed_Fatality_Report_OLD}}
+       </td><td>{{post.Unconfirmed_Fatality_Report}}</td><td>{{post.Light_Condition_OLD}}</td><td>{{post.Light_Condition}}</td><td>{{post.Road_Surface_Condition_OLD}}
+       </td><td>{{post.Road_Surface_Condition}}</td><td>{{post.Weather_Condition_OLD}}</td><td>{{post.Weather_Condition}}</td></tr>
+  {% endfor %}
+  </table>
+<p>
+  <button id="dl" class="btn btn-primary">Download</button>
+</p>
+<h3>Output:</h3>
+<div id="out" class="well"></div>
+</div>
+<script>
+  /* global $ */
+	$("#dl").click(function(){
+		$("#tab").table2csv('output', {appendTo: '#out'});
+		$("#tab").table2csv();
+	})
+</script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36251023-1']);
+  _gaq.push(['_setDomainName', 'jqueryscript.net']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</body>  
+
+</html>

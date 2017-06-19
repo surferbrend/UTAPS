@@ -1,0 +1,61 @@
+
+<html>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3-theme-black.css">
+<style>html {font-family: "RobotoDraft","Roboto",sans-serif;}
+
+table, td, th {    
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 15px;
+}
+
+</style>
+
+
+<table class="w3-table w3-striped w3-bordered">
+<thead class="w3-black"><th>Updated</th><th>Analyst OLD</th><th>Analyst</th><th>PS CASE</th>
+<th>Last Name OLD</th><th>Last Name</th><th>First Name OLD</th>
+<th>First Name</th><th>Middle Name OLD</th><th>Middle Name</th>
+<th>Sex OLD</th><th>Sex</th><th>Date of Birth OLD</th><th>Date of Birth</th>
+<th>Age OLD</th><th>Age</th><th>Address Street OLD</th><th>Address Street</th>
+<th>Address Street2 OLD</th><th>Address Street2</th><th>City OLD</th>
+<th>City</th><th>State OLD</th><th>State</th><th>Zip OLD</th><th>Zip</th>
+<th>County OLD</th><th>County</th><th>Phone OLD</th><th>Phone</th>
+<th>DL Number OLD</th><th>DL Number</th><th>DL State OLD</th><th>DL State</th>
+<th>DL Class OLD</th><th>DL Class</th><th>CDL Presented OLD</th>
+<th>CDL Presented</th><th>Transported OLD</th><th>Transported</th>
+<th>Injury Level OLD</th><th>Injury Level</th><th>Charge OLD</th>
+<th>Charge</th><th>Status Code OLD</th><th>Status Code</th>
+<th>Person Type OLD</th><th>Person Type</th><th>Vehicle Number OLD</th>
+<th>Vehicle Number</th></thead>
+
+{% for post in posts %}
+<tr><td>{{post.UpdateTime}}</td><td>{{post.user_id_OLD}}</td><td>{{post.user_id}}</td><td>{{post.PS_case}}</td>
+<td>{{post.Name_Last_OLD}}</td><td>{{post.Name_Last}}</td><td>{{post.Name_First_OLD}}</td><td>{{post.Name_First}}</td>
+<td>{{post.Name_Middle_OLD}}</td><td>{{post.Name_Middle}}</td><td>{{post.Sex_OLD}}</td><td>{{post.Sex}}</td>
+<td>{{post.Date_Of_Birth_OLD}}</td><td>{{post.Date_Of_Birth}}</td><td>{{post.Age_OLD}}</td><td>{{post.Age}}</td>
+<td>{{post.Address_Street_OLD}}</td><td>{{post.Address_Street}}</td><td>{{post.Address_Street2_OLD}}</td>
+<td>{{post.Address_Street2}}</td><td>{{post.Address_City_OLD}}</td><td>{{post.Address_City}}</td>
+<td>{{post.Address_State_OLD}}</td><td>{{post.Address_State}}</td><td>{{post.Address_Zip_OLD}}</td>
+<td>{{post.Address_County_OLD}}</td><td>{{post.Address_County}}</td><td>{{post.Phone_OLD}}</td>
+<td>{{post.Phone}}</td><td>{{post.Dl_Number_OLD}}</td><td>{{post.Dl_Number}}</td><td>{{post.Dl_State_OLD}}</td>
+<td>{{post.Dl_State}}</td><td>{{post.Dl_Class_OLD}}</td><td>{{post.Dl_Class}}</td><td>{{post.CDL_Presented_At_Scene_OLD}}</td>
+<td>{{post.CDL_Presented_At_Scene}}</td><td>{{post.Transported_To_OLD}}</td><td>{{post.Transported_To}}</td>
+<td>{{post.Injury_Level_OLD}}</td><td>{{post.Injury_Level}}</td><td>{{post.Charge_OLD}}</td><td>{{post.Charge}}</td>
+<td>{{post.Status_Code_OLD}}</td><td>{{post.Status_Code}}</td><td>{{post.Person_Type_OLD}}</td><td>{{post.Person_Type}}</td>
+<td>{{post.Vehicle_Number_OLD}}</td><td>{{post.Vehicle_Number}}</td></tr>
+
+{% endfor %}
+</table>
+</html>

@@ -16,18 +16,42 @@ import os, datetime
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+DUO_LOGIN_URL = '/duo_login'
+
+# Duo configuration.
+
+
+DUO_IKEY = 'DIZ3DCQ48497DR59CVAJ'
+DUO_SKEY = 'Ev7cKnX8gTzswo3upgYF2ONA25EpeFqhctMRx68n'
+DUO_AKEY = '1d6acb7b7c612f9bd168b06135d86b1db6f9ab75'
+DUO_HOST = 'api-4aaad112.duosecurity.com'
+
+
+ALLOWED_HOSTS = ['*','utah.edu']
+REGISTRATION_EMAIL_HTML = False
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.utah.edu'
+EMAIL_HOST_USER = 'utaps@utah.edu'
+EMAIL_HOST_PASSWORD = "Surferbrend!"
+EMAIL_PORT = 25
+EMAIL_USE_TLS = True
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '9(pql8^m-1#f_q&5gp$2)w5!e*$ogy^j3v!v7=*m)ta@2e1!2i'
+
+
+
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True  
-TEMPLATES_DEBUG = False
+DEBUG = True #False  
+TEMPLATES_DEBUG =True  # False 
 
 
-ALLOWED_HOSTS = [u'surferbrend.pythonanywhere.com']
+#ALLOWED_HOSTS = ['*',u'surferbrend.pythonanywhere.com']
 
 
 # Application definition
@@ -39,6 +63,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'django_filters',
     'rest_framework',
     'rest_framework_gis',
@@ -51,9 +76,10 @@ INSTALLED_APPS = [
     'webfront'
 ]
 
-MIDDLEWARE = [
+MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
 #    'django.contrib.sites.middleware.CurrentSiteMiddleware',
+#    'django.contrib.sites.requests',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -138,13 +164,51 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'sql_server.pyodbc',
+#        'NAME': 'UTAPS',
+#        'HOST': 'TEST.UTAPS.UTAH.EDU',
+#        'PORT': '1433',
+#        'USER':'remoteUser',
+#            'PASSWORD':'This!is!aT&$T',
+#            'OPTIONS': {
+#            'host_is_server': True,
+#            'use_legacy_datetime': True,
+#    },
+#  }
+#}
+
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'sql_server.pyodbc',
+        'NAME': 'UTAPS',
+        'HOST': 'TEST.UTAPS.UTAH.EDU',
+        'PORT': '5515',
+        'USER':'remoteTester',
+            'PASSWORD':'SuperMagic@nT$',
+            'OPTIONS': {
+            'host_is_server': True,
+            'use_legacy_datetime': True,
+    },
+  }
 }
 
+
+
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#    }
+#}
+
+
+os.environ['TDSVER'] = '8.0'
+SECRET_KEY = '9(pql8^m-1#f_q&5gp$2)w5!e*$ogy^j3v!v7=*m)ta@2e1!2i'
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -189,14 +253,17 @@ STATICFILES_DIRS = [
 #            '/static/',]
 # default static files settings for PythonAnywhere.
 # see https://help.pythonanywhere.com/pages/DjangoStaticFiles for more info
-MEDIA_ROOT = u'/home/surferbrend/mysite/media'
+MEDIA_ROOT = u'/var/www/html/mysite/mysite/media'
 MEDIA_URL = '/media/'
-STATIC_ROOT = u'/home/surferbrend/mysite/static/admin'
+STATIC_ROOT = u'/var/www/html/mysite/mysite/static/admin'
 #STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
+LOGIN_REDIRECT_URL = 'duo_login'
+LOGIN_REDIRECT_URL_DUO = '/accounts/profile'
 
-#CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 #ACCOUNT_ACTIVATION_DAYS = 30
 #REGISTRATION_AUTO_LOGIN = False
-#SITE_ID=1
+SITE_ID=1
 #CSRF_COOKIE_SECURE = True

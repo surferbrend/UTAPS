@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+{% include 'head_css.html' %}
+{% include 'navbar.html' %}
+  <title>Reconcile Table {{queryset.PS_case}}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+* {
+    box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+
+iframe {
+    display: block;       /* iframes are inline by default */
+    background: #000;
+    border: none;         /* Reset default border */
+    height: 100vh;        /* Viewport-relative units */
+    width: 25vw;
+}
+
+.columns {
+    float: left;
+    width: 33.3%;
+    padding: 8px;
+}
+
+@media only screen and (max-width: 600px) {
+    .columns {
+        width: 100%;
+    }
+}
+
+div.panel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.6s ease-in-out;
+    opacity: 0;
+}
+
+div.panel.show {
+    opacity: 1;
+    max-height: 500px;
+}
+
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 12px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myUL {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#myUL li a {
+  border: 1px solid #ddd;
+  margin-top: -1px; /* Prevent double borders */
+  background-color: #f6f6f6;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
+  display: block
+}
+
+#myUL li a.header {
+  background-color: #e2e2e2;
+  cursor: default;
+}
+
+#myUL li a:hover:not(.header) {
+  background-color: #eee;
+
+
+table, td, th {
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 15px;
+}
+
+</style>
+
+
+<body>
+
+<div class="row">
+<div class="col-md-6">
+<div class="well">
+<div class="container">
+       
+<div class="container">
+
+  <h2>Person Records</h2>
+  <ul class="nav nav-pills">
+    <li class="active"><a data-toggle="pill" href="#home">Reconcile</a></li>
+  {% if queryset1 %}
+    {% for instance in queryset1 %}
+          {% if instance.PS_case == queryset.PS_case %}
+    <li><a data-toggle="pill" href="#{{instance.ID}}">Person {{instance.ID}}</a></li>
+          {% endif %}
+    {% endfor %}
+
+
+  </ul>
+
+  <div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+<br />
+<p> Review the conflict record, then click on each person tabs and submit changes before proceeding with the reconcile</p>
+<br />
+<br />
+<div class="container">
+
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Reconcile Conflict</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Finish Editing</h4>
+
+        </div>
+
+<div class="has-warning"> To confirm changes please check the box: <input type="checkbox" id="myCheck">
+<g></g>
+
+<p class="bg-danger"id="demo"></p>
+</div>
+
+        <div class="modal-footer">
+        <button onclick="myFunction()" class="btn btn-danger" >Make Edit</button>
+
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+      
+    </div>
+
+    {% for instance in queryset1 %}
+          {% if instance.PS_case == queryset.PS_case %}
+    <div id={{instance.ID}} class="tab-pane fade">
+      <h3>Person {{instance.ID}}</h3>
+<iframe width="100%" src="{% url 'reconcile_person' pk=instance.pk %}" alt=data frameborder="0" allowfullscreen></iframe>
+    </div>
+          {% endif %}
+   {% endfor %}
+  {% endif %}
+
+  </div>
+</div>
+</div>
+</div>
+
+</div>    
+
+<div class="col-md-6">
+      <div class="well">
+
+  <h1>Conflict Person Record </h1>
+          <table class="table table-striped"><tr><h3><p>Public Safety Case # <strong>{{queryset.PS_case}}</strong></p></h3></tr>
+
+{% if queryset1 %}
+  {% for instance in queryset1 %}
+
+   {% if instance.Name_Last != queryset.Name_Last %}
+<tr><p class="text-danger">Last Name</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.Name_Last}}</strong></p></tr>
+   {% else %}
+<tr><p>Last Name</p></tr>
+<tr><p><strong>{{queryset.Name_Last}}</strong></p></tr>
+{% endif %}
+
+   {% if instance.Name_First != queryset.Name_First %}
+<tr><p class="text-danger">First Name</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.Name_First}} </strong></p></tr>
+   {% else %}
+<tr><p>First Name</p></tr>
+<tr><p><strong>{{queryset.Name_First} </strong></p></tr>
+{% endif %}
+
+   {% if instance.Name_Middle != queryset.Name_Middle %}
+<tr><p class="text-danger">Middle Name</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.Name_Middle}}</strong></p></tr>
+   {% else %}
+<tr><p>Middle Name</p></tr>
+<tr><p><strong>{{queryset.Name_Middle}}</strong></p></tr>
+{% endif %}
+
+   {% if instance.Sex != queryset.Sex %}
+<tr><p class="text-danger">Sex</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.Sex}}</strong></p></tr>
+   {% else %}
+<tr><p>Sex</p></tr>
+<tr><p><strong>{{queryset.Sex}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Date_Of_Birth != queryset.Date_Of_Birth %}
+<tr><p class="text-danger">Date of Birth</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.Date_Of_Birth}}</strong></p></tr>
+   {% else %}
+<tr><p>Date of Birth</p></tr>
+<tr><p><strong>{{queryset.Date_Of_Birth}}</strong></p></tr>
+{% endif %}
+
+   {% if instance.Age != queryset.Age %}
+<tr><p class="text-danger">Age</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.Age}}</strong></p></tr>
+   {% else %}
+<tr><p>Age</p></tr>
+<tr><p><strong>{{queryset.Age}}</strong></p></tr>
+{% endif %}
+
+   {% if instance.Address_Street != queryset.Address_Street %}
+<tr><p class="text-danger">Address Street</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.Address_Street}}</strong></p></tr>
+   {% else %}
+<tr><p>Address Street</p></tr>
+<tr><p><strong>{{queryset.Address_Street}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Address_Street2 != queryset.Address_Street2 %}
+<tr><p class="text-danger">Address Street2</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.Address_Street2}}</strong></p></tr>
+   {% else %}
+<tr><p>Address_Street2</p></tr>
+<tr><p><strong>{{queryset.Address_Street2}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Address_City != queryset.Address_City %}
+<tr><p class="text-danger">Address City</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Address_City}}</strong></p></tr>
+   {% else %}
+<tr><p>Address City</tr></p>
+<tr><p><strong>{{queryset.Address_City}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Address_State != queryset.Address_State %}
+<tr><p class="text-danger">Address State</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Address_State}}</strong></p></tr>
+   {% else %}
+<tr><p>Address State</tr></p>
+<tr><p><strong>{{queryset.Address_State}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Address_Zip != queryset.Address_Zip %}
+<tr><p class="text-danger">Address Zip</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Address_Zip}}</strong></p></tr>
+   {% else %}
+<tr><p>Address Zip</tr></p>
+<tr><p><strong>{{queryset.Address_Zip}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Address_County != queryset.Address_County %}
+<tr><p class="text-danger">Address County</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Address_County}}</strong></p></tr>
+   {% else %}
+<tr><p>Address County</tr></p>
+<tr><p><strong>{{queryset.Address_County}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Phone != queryset.Phone %}
+<tr><p>Phone</tr></p>
+<tr><p><strong>{{queryset.Phone}}</strong></p></tr>
+   {% else %}
+<tr><p class="text-danger">Phone</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Phone}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Dl_Number != queryset.Dl_Number %}
+<tr><p class="text-danger">Driver's License #</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Dl_Number}}</strong></p></tr>
+   {% else %}
+<tr><p>Driver's License #</tr></p>
+<tr><p><strong>{{queryset.Dl_Number}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Dl_State != queryset.Dl_State %}
+<tr><p>Driver's License State</tr></p>
+<tr><p><strong>{{queryset.Dl_State}}</strong></p></tr>
+   {% else %}
+<tr><p class="text-danger">Driver's License State</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Dl_State}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Dl_Class != queryset.Dl_Class %}
+<tr><p class="text-danger">Driver's License Class</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Dl_Class}}</strong></p></tr>
+   {% else %}
+<tr><p>Driver's License Class</tr></p>
+<tr><p><strong>{{queryset.Dl_Class}}</strong></p></tr>
+{% endif %}
+
+{% if instance.CDL_Presented_At_Scene != queryset.CDL_Presented_At_Scene %}
+<tr><p class="text-danger">CDL Presented At Scene</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.CDL_Presented_At_Scene}}</strong></p></tr>
+   {% else %}
+<tr><p>CDL Presented At Scene</tr></p>
+<tr><p><strong>{{queryset.CDL_Presented_At_Scene}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Transported_To != queryset.Transported_To %}
+<tr><p class="text-danger">Transported To</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Transported_To}}</strong></p></tr>
+   {% else %}
+<tr><p>Transported To</tr></p>
+<tr><p><strong>{{queryset.Transported_To}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Injury_Level != queryset.Injury_Level %}
+<tr><p class="text-danger">Injury Level</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Injury_Level}}</strong></p></tr>
+   {% else %}
+<tr><p>Injury Level</tr></p>
+<tr><p><strong>{{queryset.Injury_Level}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Charge != queryset.Charge %}
+<tr><p>Charge</tr></p>
+<tr><p><strong>{{queryset.Charge}}</strong></p></tr>
+   {% else %}
+<tr><p class="text-danger">Charge</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Charge}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Status_Code != queryset.Status_Code %}
+<tr><p>Status Code</tr></p>
+<tr><p><strong>{{queryset.Status_Code}}</strong></p></tr>
+   {% else %}
+<tr><p class="text-danger">Status Code</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Status_Code}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Person_Type != queryset.Person_Type %}
+<tr><p class="text-danger">Person Type</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Person_Type}}</strong></p></tr>
+   {% else %}
+<tr><p>Person Type</tr></p>
+<tr><p><strong>{{queryset.Person_Type}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Vehicle_Number != queryset.Vehicle_Number %}
+<tr><p class="text-danger">Vehicle #</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Vehicle_Number}}</strong></p></tr>
+   {% else %} 
+<tr><p>Vehicle #</tr></p>
+<tr><p><strong>{{queryset.Vehicle_Number}}</strong></p></tr>
+{% endif %}
+
+{% if instance.created_date != queryset.created_date %}
+<tr><p class="text-danger">created date</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.created_date}}</strong></p></tr>
+   {% else %}
+<tr><p>created date</tr></p>
+<tr><p><strong>{{queryset.created_date}}</strong></p></tr>
+{% endif %}
+
+    {% endfor %}
+  {% endif %}
+
+</table>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+
+var url = "{% url 'delete_cp' pk=queryset.pk %}";
+function myFunction() {
+    if (document.getElementById("myCheck").checked){
+        $("g").append("<a href='{% url 'delete_cp' pk=queryset.pk %}'><button type='button' class='btn btn-info'>Submit</button></a>");
+       
+}
+    else{
+        var x ="To proceed with the changes please check the box";
+        document.getElementById("demo").innerHTML = x;}
+        
+}
+</script>
+ 
+   
+</body>
+</html>
+
+
+
+
+

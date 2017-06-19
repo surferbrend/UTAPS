@@ -1,0 +1,247 @@
+<html>
+<head>
+  <meta charset=utf-8 />
+  <title>Querying features</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+  <!-- Load Leaflet from CDN-->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js"></script>
+
+  <!-- Load Esri Leaflet from CDN -->
+  <script src="https://unpkg.com/esri-leaflet@2.0.8"></script>
+
+  <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.2.4/dist/esri-leaflet-geocoder.css">
+
+  <script src="https://unpkg.com/esri-leaflet-geocoder@2.2.4"></script>
+
+  <style>
+    body { margin:0; padding:0; }
+    #map { position: absolute; top:0; bottom:0; right:0; left:0; }
+   .mydivicon{
+    width: 12px
+    height: 12px;
+    border-radius: 10px;
+    background: #ff7800;
+    border: 1px solid #000;
+    opacity: 0.85;
+    }
+    
+    .MPTooltip{
+    height: 15px;
+    background: rgba(191, 82, 63, 0.13);
+    font-family: Arial;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #260C19;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius:8px;
+    box-shadow: 0 0px 0px;
+  	}
+        
+  #info-pane {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 400;
+    padding: 1em;
+    background: white;
+  }
+  #basemaps-wrapper {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 400;
+    background: white;
+    padding: 10px;
+  }
+  #basemaps {
+    margin-bottom: 5px;
+  }
+
+  </style>
+</head>
+<body>
+ 
+
+{% if queryset %}
+  {% for instance in queryset %}
+<div id="map"></div>
+
+<div id="basemaps-wrapper" class="leaflet-bar">
+  <select name="basemaps" id="basemaps" onChange="changeBasemap(basemaps)">
+    <option value="Streets">Streets</option>
+    <option value="Topographic">Topographic</option>
+    <option value="NationalGeographic">National Geographic</option>
+    <option value="Oceans">Oceans</option>
+    <option value="Gray">Gray</option>
+    <option value="DarkGray">Dark Gray</option>
+    <option value="Imagery">Imagery</option>
+    <option value="ShadedRelief">Shaded Relief</option>
+  </select>
+<button type="button" class="btn btn-primary" onclick="Make()" >Geocode address</button>
+<p id='did'></p>
+</div>
+
+
+
+
+<script>
+
+
+  var lat = {{instance.latitude}};
+  var long = {{instance.longitude}};
+
+
+
+  var map = L.map('map').setView([lat, long], 20);
+  var marker = L.marker([lat, long]).addTo(map);
+  var icon = new L.divIcon({className: 'mydivicon'});
+
+
+
+  var searchControl = L.esri.Geocoding.geosearch().addTo(map);
+
+    // create an empty layer group to store the results and add it to the map
+  var results = L.layerGroup().addTo(map);
+
+    // listen for the results event and add every result to the map
+  searchControl.on("results", function(data) {
+    results.clearLayers();
+    for (var i = data.results.length - 1; i >= 0; i--) {
+      results.addLayer(L.marker(data.results[i].latlng));
+    }
+  });
+
+
+
+  var layer = L.esri.basemapLayer('Streets').addTo(map);
+
+  var layerLabels;
+
+  function setBasemap(basemap) {
+    if (layer) {
+      map.removeLayer(layer);
+    }
+
+    layer = L.esri.basemapLayer(basemap);
+
+    map.addLayer(layer);
+
+    if (layerLabels) {
+      map.removeLayer(layerLabels);
+    }
+
+    if (basemap === 'ShadedRelief'
+     || basemap === 'Gray'
+     || basemap === 'DarkGray'
+     || basemap === 'Imagery'
+     || basemap === 'Terrain'
+   ) {
+      layerLabels = L.esri.basemapLayer(basemap + 'Labels');
+      map.addLayer(layerLabels);
+    }
+  }
+
+  function changeBasemap(basemaps){
+    var basemap = basemaps.value;
+    setBasemap(basemap);
+  }
+
+
+  var milepost = L.esri.featureLayer({
+  url: "https://utaps1.utaps-data.utah.edu/arcgis/rest/services/Leaflet/Milepost/MapServer/2",
+    useCors: false,
+    style:function(feature)
+    {
+      return {color: '#000000'};
+    },
+     pointToLayer: function (feature, latlng)
+    {
+         return new L.Marker(latlng, {icon: icon});
+    },
+    onEachFeature: function(feature, layer) {
+        layer.bindTooltip("MP: " + layer.feature.properties.MP.toString(), {permanent:true, direction:'auto', offset: [0, -1], className: 'MPTooltip'});        
+    }
+
+  }).addTo(map);;
+
+ var stops = L.esri.featureLayer({
+  url: "https://utaps1.utaps-data.utah.edu/arcgis/rest/services/Leaflet/UTRD/FeatureServer/0",
+    useCors: false,
+    style:function(feature)
+    {
+      return {color: '#72605a'};
+    }
+  }).addTo(map);
+
+  var previousIds = [];
+
+
+  stops.on('mouseover', function(e){
+ 
+  if (e.layer.feature.properties.DOT_F_MILE > e.layer.feature.properties.DOT_T_MILE) {
+ 
+     var popup = L.popup().setLatLng(e.latlng)
+     .setContent("Route: "+(e.layer.feature.properties.DOT_RTNAME.toString())+"&nbsp;MP:&nbsp"+(e.layer.feature.properties.DOT_T_MILE-((e.latlng.lat-lat)+(e.latlng.lng-long))).toString()).openOn(map);
+    } else {
+     var popup = L.popup().setLatLng(e.latlng)
+     .setContent("Route: "+(e.layer.feature.properties.DOT_RTNAME.toString())+"&nbsp;MP:&nbsp"+(e.layer.feature.properties.DOT_F_MILE-((e.latlng.lat-lat)+(e.latlng.lng-long))).toString()).openOn(map);
+   
+    } 
+  
+    stops.query().nearby(e.latlng, 2).ids(function(error, ids){
+      	for (var j = 0; j < previousIds.length; j++) {
+        	stops.resetStyle(previousIds[j]);
+    
+        }
+
+        previousIds = ids;
+        for (var i = 0; i < ids.length; i++) {
+           stops.setFeatureStyle(ids[i], {
+              color: '#BA454E',
+              weight: 2,
+              opacity: 0.85,
+              fillOpacity: 0.5
+           });
+        }
+    });
+  
+  });
+
+stops.on('click', function(e) {
+x= e.latlng.lat.toString();  y = e.latlng.lng.toString();
+var popupTemplate = "<form class='form-inline' method='post' action=''>{% csrf_token %}<div id='div_id_PS_case' class='form-group'><label for='id_PS_case' class='control-label  requiredField'>PS Case ID<span class='asteriskField'>*</span></label><div class='controls '><input class='numberinput form-control' id='id_PS_case' max='9223372036854775807' min='-9223372036854775808' name='PS_Case_ID' type='number' value={{instance.PS_Case_ID}} /></div></div><div id='div_id_Route' class='form-group'><label for='id_Route' class='control-label'>Route</label><div class='controls '><input class='textinput textInput form-control' id='id_Route' maxlength='4' name='route_number' type='text' value='{DOT_RTNAME}' /></div></div><div id='div_id_County_Code' class='form-group'><label for='id_County_Code' class='control-label '>County Code</label><div class='controls '><input class='textinput textInput form-control' id='id_County_Code' maxlength='3' name='county_ID' type='text' value='{COFIPS}' /></div></div><div id='div_id_Milepoint' class='form-group'><label for='id_Milepoint' class='control-label '>Milepoint</label><div class='controls '><input class='textinput textInput form-control' id='id_Milepoint' maxlength='8' name='milepoint' type='text'{% if DOT_T_MILE > 0 %} value='{DOT_T_MILE}-((e.latlng.lat-lat)+(e.latlng.lng-long)).toFixed(3)'{% else %} value='{DOT_T_MILE}'{% endif %}/></div></div><div id='div_id_City' class='form-group'><label for='id_City' class='control-label '>City</label><div class='controls'><input class='textinput textInput form-control' id='id_City' maxlength='20' name='city' type='text' value='{USPS_PLACE}' /></div></div><div id='div_id_Main_Road_Name' class='form-group'><label for='id_Main_Road_Name' class='control-label '>Main Road Name</label><div class='controls '><input class='textinput textInput form-control' id='id_Main_Road_Name' maxlength='30' name='address' type='text' value='{FULLNAME}' /></div></div><div id='div_id_Zip' class='form-group'><label for='id_Zip' class='control-label '>Zip</label><div class='controls '><input class='textinput textInput form-control' id='id_Zip' maxlength='4' name='zip_code' type='text' value='{ZIPLEFT}' /></div></div><div id='div_id_Lat' class='form-group'><label for='id_Lat' class='control-label '>Latitude</label><div class='controls '><input class='textinput textInput form-control' id='id_Lat' maxlength='22' name='latitude' type='text' value="+x+"/></div></div><div id='div_id_Long' class='form-group'><label for='id_Long' class='control-label '>Longitude</label><div class='controls '><input class='textinput textInput form-control' id='id_Long' maxlength='22' name='longitude' type='text' value="+y+"/></div></div><br /><input class='btn btn-default' type='submit' value ='Submit' /></form>";
+stops.bindPopup(function(e){
+       return L.Util.template(popupTemplate, e.feature.properties)
+  });
+});  
+
+
+
+var frame = document.getElementById('lookup');
+    frame.onload = function () {
+        var body = frame.contentWindow.document.querySelector('body');
+        body.style.color = 'red';
+        body.style.fontSize = '20px';
+        body.style.lineHeight = '20px';
+    };
+
+
+  
+function M() {
+    myWindow = window.open("http://cdi-utaps.test.utah.edu/gup/"+{{instance.id}}+"/edit","_blank","resizable=1, scrollbars=1, fullscreen=0, height=auto, width=auto, screenX=' + window.leftScreenBoundry() + ' , left=' + window.leftScreenBoundry() + ', toolbar=0, menubar=0, status=1");
+}
+
+function Make() {
+    document.getElementById("did").innerHTML = '<iframe width="100%" src="http://cdi-utaps.test.utah.edu/gup/{{instance.id}}/edit"></iframe>';
+}
+</script>
+
+  </script>
+      {% endfor %}
+  {% endif %}
+</body>
+</html>
+

@@ -11,6 +11,7 @@ ModelSerializer = serializers.HyperlinkedModelSerializer
 #QC GROUP
 class CrashSerializer(serializers.Serializer):
     ID = serializers.IntegerField()
+    Assigned = serializers.CharField(required=False, allow_blank=True, max_length= 20)
     PS_Case_ID = serializers.CharField(required=False, allow_blank=True, max_length=100)
     Date_of_Crash = serializers.DateTimeField()
     Crash_Verified = serializers.NullBooleanField()
@@ -29,6 +30,7 @@ class CrashSerializer(serializers.Serializer):
          Update and return an existing `Snippet` instance, given the validated data.
          """
          instance.Date_of_Crash = validated_data.get('Date_of_Crash', instance.Date_of_Crash)
+         instance.Assigned = validated_data.get('Assigned', instance.Assigned)
          instance.PS_Case_ID = validated_data.get('PS_Case_ID', instance.PS_case)
          instance.City = validated_data.get('City', instance.City )
          instance.Main_Road_Name = validated_data.get('Main_Road_Name', instance.Main_Road_Name )
@@ -41,7 +43,7 @@ class CrashSerializer(serializers.Serializer):
 class CrashSerializer(serializers.ModelSerializer):
     class Meta:
         model = Crash
-        fields = ('ID','PS_Case_ID','Crash_Verified','Date_of_Crash','City','Main_Road_Name','Narrative','Checkout')
+        fields = ('ID','Assigned','PS_Case_ID','Crash_Verified','Date_of_Crash','City','Main_Road_Name','Narrative','Checkout')
 
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
@@ -280,6 +282,7 @@ class CMVVSerializer(serializers.ModelSerializer):
 #STREAM
 class PostSerializer(serializers.Serializer):
        ID = serializers.IntegerField()
+       Assigned = serializers.CharField(required=False, allow_blank=True, max_length=20)
        PS_case = serializers.IntegerField(required=False)
        Road_Junction_Feature = serializers.IntegerField(required=False)
        Work_Zone_Related = serializers.BooleanField(required=False)
@@ -301,6 +304,7 @@ class PostSerializer(serializers.Serializer):
             Update and return an existing `Snippet` instance, given the validated data.
             """
             instance.PS_case = validated_data.get('PS_case', instance.PS_case)
+            instance.Assigned = validated_data.get('Assigned',instance.Assigned)
             instance.Road_Junction_Feature = validated_data.get('Road_Junction_Feature', instance.Road_Junction_Feature)
             instance.Work_Zone_Related = validated_data.get('Work_Zone_Related', instance.Work_Zone_Related)
             instance.Work_Zone_Worker_Present = validated_data.get('Work_Zone_Worker_Present', instance.Work_zone_Worker_Present)
@@ -316,7 +320,7 @@ class PostSerializer(serializers.Serializer):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Crash
-        fields = ('ID','PS_case','Road_Junction_Feature', 'Work_Zone_Related','Work_Zone_Worker_Present','Work_Zone_ID','First_Harmful_Event','Crash_Severity','Date_of_Crash','Date_of_Crash','City','Manner_Collision')
+        fields = ('ID','PS_case','Assigned','Road_Junction_Feature', 'Work_Zone_Related','Work_Zone_Worker_Present','Work_Zone_ID','First_Harmful_Event','Crash_Severity','Date_of_Crash','Date_of_Crash','City','Manner_Collision')
 
 
 class ProfileSerializer(serializers.Serializer):

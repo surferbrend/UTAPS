@@ -1,0 +1,194 @@
+<html>
+{% include 'head_css.html' %}
+{% load rest_framework %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+
+{% if queryset %}
+  {% for inst in queryset %}
+
+
+
+
+
+
+<form method= 'POST' action='' class="form-inline" method="post" ><input type='hidden' name='csrfmiddlewaretoken' value='oRef8NqkwkUSHuXvB3ApMB5NqJjrmIaa' />{% csrf_token %}
+
+<div id="div_id_PS_Case_ID" class="form-group"> <label for="id_PS_Case_ID" class="control-label requiredField">
+                PS Case ID<span class="asteriskField">*</span> </label> <div class="controls"> <input class="textinput textInput" id="id_PS_Case_ID" maxlength="20" name="PS_Case_ID" type="text" value="{{inst.PS_Case_ID}}" /> </div> </div> <div id="div_id_latitude" class="form-group"> <label for="id_latitude" class="control-label ">
+                Latitude
+            </label> <div class="controls"> <input id="R" class="textinput textInput" id="id_latitude" maxlength="22" name="latitude" type="text" value="{{inst.latitude}}" /> </div> </div> <div id="div_id_longitude" class="form-group"> <label for="id_longitude" class="control-label ">
+                Longitude
+            </label> <div class="controls"> <input id="A" class="textinput textInput" id="id_longitude" maxlength="22" name="longitude" type="text" value="{{inst.longitude}}" /> </div> </div> <div id="div_id_address" class="form-group"> <label for="id_address" class="control-label ">
+                Address
+            </label> <div class="controls"> <input id="T" class="textinput textInput" id="id_address" maxlength="100" name="address" type="text" value="{{inst.address}}" /> </div> </div> <div id="div_id_city" class="form-group"> <label for="id_city" class="control-label ">
+                City
+            </label> <div class="controls"> <input id="S" class="textinput textInput" id="id_city" maxlength="30" name="city" type="text" value="{{inst.city}}" /> </div> </div> 
+
+
+<input class='btn btn-default' type='submit' onclick="my()" value ='Submit' />
+<!-- <input type ='text'> -->
+
+</form>
+
+
+
+
+
+<script>
+
+
+var county;
+
+
+var county_ID = {{inst.county_ID}};
+
+
+
+switch(county_ID){
+    case 01:
+        county = "Beaver";
+        break;
+    case 03:
+        county = "Box Elder";
+        break;
+    case 05:
+        county = "Cache";
+        break;
+    case 07:
+        county = "Carbon";
+        break;
+    case 09:
+        county = "Daggett";
+        break;
+    case 011:
+        county = "Davis";
+        break;
+    case 013:
+        county = "Duchesne";
+        break;
+    case 015:
+        county = "Emery";
+        break;
+    case 017:
+        county = "Garfield";
+        break;
+    case 019:
+        county = "Grand";
+        break;
+    case 021:
+        county = "Iron";
+        break;
+    case 023:
+        county = "Juab";
+        break;
+    case 025:
+        county = "Kane";
+        break;
+    case 027:
+        county = "Millard";
+        break;
+    case 029:
+        county = "Morgan";
+        break;
+    case 031:
+        county = "Piute";
+        break;
+    case 033:
+        county = "Rich";
+        break;
+    case 035:
+        county = "Salt Lake";
+        break;
+    case 037:
+        county = "San Juan";
+        break;
+    case 039:
+        county = "Sanpete";
+        break;
+    case 041:
+        county = "Sevier";
+        break;
+    case 043:
+        county = "Summit";
+        break;
+    case 045:
+        county = "Toole";
+        break;
+    case 047:
+        county = "Uintah";
+        break;
+    case 049:
+        county = "Utah";
+        break;
+    case 051:
+        county = "Wasatch";
+        break;
+    case 053:
+        county = "Washington";
+        break;
+    case 055:
+        county = "Wayne";
+        break;
+    case 057:
+        county = "Weber";
+        break;
+}
+
+var x = "+{{inst.address}}+";
+var y ="+{{inst.city}}+";
+if (x.length > 1){
+if (y.length > 2){
+     var r = "https://maps.googleapis.com/maps/api/geocode/json?address={{inst.address}}+{{inst.city}}+UT&key=AIzaSyB5sSZqAHvuySNYNz9G5aRJQUmsn2RJiOg";
+} else {  var r = "https://maps.googleapis.com/maps/api/geocode/json?address="+county+"county+UT&key=AIzaSyB5sSZqAHvuySNYNz9G5aRJQUmsn2RJiOg";}
+}
+
+$.getJSON(r, function (json) {
+
+    // Set the variables from the results array
+    var lat = json.results[0].geometry.location.lat;
+    var long = json.results[0].geometry.location.lng;
+    var address = json.results[0].address_components[0].long_name + json.results[0].address_components[1].long_name;
+    var city = json.results[0].address_components[2].long_name;
+    document.getElementById("R").value= lat;
+    document.getElementById("A").value= long;
+    document.getElementById("T").value= address;
+    document.getElementById("S").value= city;
+
+//var model =
+   // var make = json.content.
+    //console.log('Address : ', address);
+    $('#lat').text(lat);
+    $('#long').text(long);
+    $('#address').text(address);
+    $('#city').text(city);
+    
+
+});
+
+function M() {
+    myWindow = window.open("https://maps.googleapis.com/maps/api/geocode/json?address={{inst.address}}+{{inst.city}}+UT&key=AIzaSyB5sSZqAHvuySNYNz9G5aRJQUmsn2RJiOg","_blank","resizable=1, scrollbars=1, fullscreen=0, height=auto, width=auto, screenX=' + window.leftScreenBoundry() + ' , left=' + window.leftScreenBoundry() + ', toolbar=0, menubar=0, status=1");
+}
+
+function doit() {
+    parent.location.href = parent.location.href;
+}
+
+function my() {
+   window.top.location.reload(); 
+}
+
+//document.getElementById("demo").innerHTML = "County " + county;
+
+
+
+</script>
+
+{% endfor %}
+{% endif %}
+</html>

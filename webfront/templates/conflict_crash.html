@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+{% include 'head_css.html' %}
+{% include 'navbar.html' %}
+  <title>Reconcile Table {{queryset.PS_case}}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+* {
+    box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+
+iframe {
+    display: block;       /* iframes are inline by default */
+    background: #000;
+    border: none;         /* Reset default border */
+    height: 100vh;        /* Viewport-relative units */
+    width: 25vw;
+}
+
+.columns {
+    float: left;
+    width: 33.3%;
+    padding: 8px;
+}
+
+@media only screen and (max-width: 600px) {
+    .columns {
+        width: 100%;
+    }
+}
+
+div.panel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.6s ease-in-out;
+    opacity: 0;
+}
+
+div.panel.show {
+    opacity: 1;
+    max-height: 500px;
+}
+
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 12px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myUL {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#myUL li a {
+  border: 1px solid #ddd;
+  margin-top: -1px; /* Prevent double borders */
+  background-color: #f6f6f6;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
+  display: block
+}
+
+#myUL li a.header {
+  background-color: #e2e2e2;
+  cursor: default;
+}
+
+#myUL li a:hover:not(.header) {
+  background-color: #eee;
+
+
+table, td, th {
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 15px;
+}
+
+</style>
+
+
+<body>
+
+
+<div class="row">
+<div class="col-md-6">
+<div class="well">
+<div class="container">
+       
+<div class="container">
+
+  <h2>Crash Record</h2>
+  <ul class="nav nav-pills">
+    <li class="active"><a data-toggle="pill" href="#home">Reconcile</a></li>
+  {% if queryset1 %}
+    {% for instance in queryset1 %}
+          {% if instance.PS_case == queryset.PS_case %}
+    <li><a data-toggle="pill" href="#{{instance.PS_case}}">Crash {{instance.PS_case}}</a></li>
+          {% endif %}
+    {% endfor %}
+
+  </ul>
+
+  <div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+<br />
+<p> Review the conflict record, then click on the crash tab and submit changes before proceeding</p>
+<br />
+<br />
+<div class="container">
+
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Reconcile Conflict</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Finish Editing</h4>
+
+        </div>
+
+<div class="has-warning"> To confirm changes please check the box: <input type="checkbox" id="myCheck">
+<g></g>
+
+<p class="bg-danger"id="demo"></p>
+</div>
+
+        <div class="modal-footer">
+        <button onclick="myFunction()" class="btn btn-danger" >Make Edit</button>
+
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+      
+    </div>
+
+    {% for instance in queryset1 %}
+          {% if instance.PS_case == queryset.PS_case %}
+    <div id={{instance.PS_case}} class="tab-pane fade">
+      <h3>Crash {{instance.PS_case}}</h3>
+<iframe width="100%" src="{% url 'reconcile_crash' pk=instance.pk %}" alt=data frameborder="0" allowfullscreen></iframe>
+    </div>
+          {% endif %}
+   {% endfor %}
+  {% endif %}
+
+  </div>
+</div>
+</div>
+</div>
+
+</div>     
+
+<div class="col-md-6">
+      <div class="well">
+
+  <h1>Conflict Crash Record </h1>
+<table class="table table-striped"><tr><h3><p>Public Safety Case #<p></h3></tr><tr><p><strong>{{queryset.PS_case}}</strong></p></tr>
+
+{% if queryset1 %}
+  {% for instance in queryset1 %}
+
+   {% if instance.DLD != queryset.DLD %}
+<tr><p class="text-danger">DLD</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.DLD}}</strong></p></tr>
+   {% else %}
+<tr><p>DLD</p></tr>
+<tr><p><strong>{{queryset.DLD}}</strong></p></tr>
+{% endif %}
+
+   {% if instance.Date_of_Crash != queryset.Date_of_Crash %}
+<tr><p class="text-danger">Date of Crash</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.Date_of_Crash}} </strong></p></tr>
+   {% else %}
+<tr><p>Date of Crash</p></tr>
+<tr><p><strong>{{queryset.Date_of_Crash}} </strong></p></tr>
+{% endif %}
+
+   {% if instance.Route != queryset.Route %}
+<tr><p class="text-danger">Route</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.Route}}</strong></p></tr>
+
+   {% else %}
+<tr><p>Route</p></tr>
+<tr><p><strong>{{queryset.Route}}</strong></p></tr>
+{% endif %}
+
+   {% if instance.Direction != queryset.Direction %}
+<tr><p class="text-danger">Direction</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.Direction}}</strong></p></tr>
+   {% else %}
+<tr><p>Direction</p></tr>
+<tr><p><strong>{{queryset.Direction}}</strong></p></tr>
+{% endif %}
+
+{% if instance.County_Code != queryset.County_Code %}
+<tr><p class="text-danger">County Code </p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.County_Code}}</strong></p></tr>
+   {% else %}
+<tr><p>County Code </p></tr>
+<tr><p><strong>{{queryset.County_Code}}</strong></p></tr>
+{% endif %}
+
+   {% if instance.Milepoint != queryset.Milepoint %}
+<tr><p class="text-danger">Crash Verified</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.Crash_Verified}}</strong></p></tr>
+   {% else %}
+<tr><p>Crash Verified</p></tr>
+<tr><p><strong>{{queryset.Crash_Verified}}</strong></p></tr>
+{% endif %}
+
+   {% if instance.City != queryset.City %}
+<tr><p class="text-danger">City</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.City}}</strong></p></tr>
+   {% else %}
+<tr><p>City</p></tr>
+<tr><p><strong>{{queryset.City}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Exit_Number != queryset.Exit_Number %}
+<tr><p class="text-danger">Exit Number</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.Exit_Number}}</strong></p></tr>
+   {% else %}
+<tr><p>Exit Number</p></tr>
+<tr><p><strong>{{queryset.Exit_Number}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Ramp_ID != queryset.Ramp_ID %}
+<tr><p class="text-danger">Ramp ID </tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Ramp_ID}}</strong></p></tr>
+   {% else %}
+<tr><p>Ramp ID </tr></p>
+<tr><p><strong>{{queryset.Ramp_ID}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Case_Number != queryset.Case_Number %}
+<tr><p class="text-danger">Case Number </tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Case_Number}}</strong></p></tr>
+   {% else %}
+<tr><p>Case Number </tr></p>
+<tr><p><strong>{{queryset.Case_Number}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Crash_Severity != queryset.Crash_Severity %}
+<tr><p class="text-danger">Crash Severity</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Crash_Severity}}</strong></p></tr>
+   {% else %}
+<tr><p>Crash Severity</tr></p>
+<tr><p><strong>{{queryset.Crash_Severity}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Nearest_City != queryset.Nearest_City %}
+<tr><p class="text-danger">Nearest City</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Nearest_City}}</strong></p></tr>
+   {% else %}
+<tr><p>Nearest City</tr></p>
+<tr><p><strong>{{queryset.Nearest_City}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Distance != queryset.Distance %}
+<tr><p>Distance</tr></p>
+<tr><p><strong>{{queryset.Distance}}</strong></p></tr>
+   {% else %}
+<tr><p class="text-danger">Distance</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Distance}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Manner_Collision != queryset.Manner_Collision %}
+<tr><p class="text-danger">Manner of Collision</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Manner_Collision}}</strong></p></tr>
+   {% else %}
+<tr><p>Manner of Collision</tr></p>
+<tr><p><strong>{{queryset.Manner_Collision}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Main_Road_Name != queryset.Main_Road_Name %}
+<tr><p>Main Road Name</tr></p>
+<tr><p><strong>{{queryset.Main_Road_Name}}</strong></p></tr>
+   {% else %}
+<tr><p class="text-danger">Main Road Name</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Main_Road_Name}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Road_Junction_Feature != queryset.Road_Junction_Feature %}
+<tr><p class="text-danger">Road Junction Feature</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Road_Junction_Feature}}</strong></p></tr>
+   {% else %}
+<tr><p>Road Junction Feature</tr></p>
+<tr><p><strong>{{queryset.Road_Junction_Feature}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Road_Jurisdiction != queryset.Road_Jurisdiction %}
+<tr><p class="text-danger">Road Jurisdiction</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Road_Jurisdiction}}</strong></p></tr>
+   {% else %}
+<tr><p>Road Jurisdiction</tr></p>
+<tr><p><strong>{{queryset.Road_Jurisdiction}}</strong></p></tr>
+{% endif %}
+
+{% if instance.At_Intersection_With != queryset.At_Intersection_With %}
+<tr><p class="text-danger">At Interestion With</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.At_Intersection_With}}</strong></p></tr>
+   {% else %}
+<tr><p>At Interestion With</tr></p>
+<tr><p><strong>{{queryset.At_Intersection_With}}</strong></p></tr>
+{% endif %}
+
+{% if instance.First_Harmful_Event != queryset.First_Harmful_Event %}
+<tr><p class="text-danger">First Harmful Event</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.First_Harmful_Event}}</strong></p></tr>
+   {% else %}
+<tr><p>First Harmful Event</tr></p>
+<tr><p><strong>{{queryset.First_Harmful_Event}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Not_at_Intersection_Distance != queryset.Not_at_Intersection_Distance %}
+<tr><p>Not At Intersection Distance</tr></p>
+<tr><p><strong>{{queryset.Not_at_Intersection_Distance}}</strong></p></tr>
+   {% else %}
+<tr><p class="text-danger">Not At Intersection Distance</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Not_at_Intersection_Distance}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Not_at_Intersection_Direction != queryset.Not_at_Intersection_Direction %}
+<tr><p>Not At Intersection Direction</tr></p>
+<tr><p><strong>{{queryset.Not_at_Intersection_Direction}}</strong></p></tr>
+   {% else %}
+<tr><p class="text-danger">Not At Intersection Direction</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Not_at_Intersection_Direction}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Nearest_Intersection != queryset.Nearest_Intersection %}
+<tr><p class="text-danger">Nearest Intersection</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Nearest_Intersection}}</strong></p></tr>
+   {% else %}
+<tr><p>Nearest Intersection</tr></p>
+<tr><p><strong>{{queryset.Nearest_Intersection}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Ref_Post_Distance != queryset.Ref_Post_Distance %}
+<tr><p class="text-danger">Ref Post Distance</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Ref_Post_Distance}}</strong></p></tr>
+   {% else %}
+<tr><p>Ref Post Distance</tr></p>
+<tr><p><strong>{{queryset.Ref_Post_Distance}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Ref_Post_Direction != queryset.Ref_Post_Direction %}
+<tr><p class="text-danger">Ref Post Direction</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Ref_Post_Direction}}</strong></p></tr>
+   {% else %}
+<tr><p>Ref Post Direction</tr></p>
+<tr><p><strong>{{queryset.Ref_Post_Direction}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Ref_Post_Description != queryset.Ref_Post_Description %}
+<tr><p class="text-danger">Ref Post Description</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Ref_Post_Description}}</strong></p></tr>
+   {% else %}
+<tr><p>Ref Post Description</tr></p>
+<tr><p><strong>{{queryset.Ref_Post_Description}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Work_Zone_Location != queryset.Work_Zone_Location %}
+<tr><p class="text-danger">Work Zone Location</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Work_Zone_Location}}</strong></p></tr>
+   {% else %}
+<tr><p>Work Zone Location</tr></p>
+<tr><p><strong>{{queryset.Work_Zone_Location}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Work_Zone_ID != queryset.Work_Zone_ID %}
+<tr><p class="text-danger">Work Zone ID</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Work_Zone_ID}}</strong></p></tr>
+   {% else %}
+<tr><p>Work Zone ID</tr></p>
+<tr><p><strong>{{queryset.Work_Zone_ID}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Narrative != queryset.Narrative %}
+<tr><p class="text-danger">Narrative</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Narrative}}</strong></p></tr>
+   {% else %}
+<tr><p>Narrative</tr></p>
+<tr><p><strong>{{queryset.Narrative}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Work_Zone_Related != queryset.Work_Zone_Related %}
+<tr><p class="text-danger">Work Zone Related</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Work_Zone_Related}}</strong></p></tr>
+   {% else %}
+<tr><p>Work Zone Related</tr></p>
+<tr><p><strong>{{queryset.Work_Zone_Related}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Work_Zone_Worker_Present != queryset.Work_Zone_Worker_Present %}
+<tr><p class="text-danger">Work Zone Worker Present</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Work_Zone_Worker_Present}}</strong></p></tr>
+   {% else %}
+<tr><p>Work Zone Worker Present</tr></p>
+<tr><p><strong>{{queryset.Work_Zone_Worker_Present}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Light_Condition != queryset.Light_Condition %}
+<tr><p class="text-danger">Light Condition</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Light_Condition}}</strong></p></tr>
+   {% else %}
+<tr><p>Light Condition</tr></p>
+<tr><p><strong>{{queryset.Light_Condition}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Road_Surface_Condition != queryset.Road_Surface_Condition %}
+<tr><p class="text-danger">Road Surface Condition</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Road_Surface_Condition}}</strong></p></tr>
+   {% else %}
+<tr><p>Road Surface Condition</tr></p>
+<tr><p><strong>{{queryset.Road_Surface_Condition}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Weather_Condition != queryset.Weather_Condition %}
+<tr><p class="text-danger">Weather Condition</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Weather_Condition}}</strong></p></tr>
+   {% else %}
+<tr><p>Weather Condition</tr></p>
+<tr><p><strong>{{queryset.Weather_Condition}}</strong></p></tr>
+{% endif %}
+
+    {% endfor %}
+  {% endif %}
+
+</table>
+</div>
+</div>
+</div>
+</div>
+ 
+
+<script>
+
+function myFunction() {
+    if (document.getElementById("myCheck").checked){
+        $("g").append("<a href='{% url 'delete_cc' pk=queryset.pk %}'><button type='button' class='btn btn-info'>Submit</button></a>");
+       
+}
+    else{
+        var x ="To proceed with the changes please check the box";
+        document.getElementById("demo").innerHTML = x;}
+        
+}
+</script>
+ 
+   
+</body>
+</html>
+
+
+

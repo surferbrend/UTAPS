@@ -19,7 +19,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from webfront.views import home, contact, about, form, dyno, profile, full, u
+from webfront.views import home, contact, about, form, dyno, profile, full, u, duo
 from rest_framework import routers
 from rest_framework.routers import DefaultRouter
 admin.autodiscover()
@@ -28,7 +28,7 @@ router = DefaultRouter()
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', home, name='home'),
-    url(r'^contact/$', contact,name='contact'),
+#    url(r'^contact/$', contact,name='contact'),
     url(r'^about/$', about, name='about'),
     url(r'^form/$',form, name='form'),
                           
@@ -52,7 +52,7 @@ urlpatterns = [
 ## Admin
 #   url(r'^admin/', include(admin.site.urls)),
    url(r'^', include(router.urls)),
-#   url(r'^duo_private/','webfront.views.duo'),
+   url(r'^duo_private/',duo),
    url(r'^accounts/', include('registration.auth_urls')),
    url(r'^accounts/', include('registration.backends.default.urls')),
         

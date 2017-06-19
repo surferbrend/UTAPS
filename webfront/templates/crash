@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% include 'head_css.html' %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://surferbrend.pythonanywhere.com/static/admin/css/w3.css">
+<link rel="stylesheet" href="http://surferbrend.pythonanywhere.com/static/admin/css/w3-theme-black.css">
+<link href="http://surferbrend.pythonanywhere.com/static/admin/css/RobotoDraft.css" rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="http://surferbrend.pythonanywhere.com/static/admin/css/font-awesome.min.css"><style>
+<link rel="stylesheet" href="http://surferbrend.pythonanywhere.com/static/admin/css/bootstrap.min.css">
+html,body,h1,h2,h3,h4,h5 {font-family: "RobotoDraft","Roboto",sans-serif;}
+.w3-sidenav a {padding:16px;font-weight:bold}
+.center {
+   margin: auto;
+   width: 10%;
+   padding: 0px;
+}
+.left {
+    position: absolute;
+    left: 0px;
+    width: 10%;
+    padding: 0px;
+}
+.right {
+    position: absolute;
+    right: 10px;
+    width: 10%;
+    padding: 0px;
+}
+.right1 {
+    position: absolute;
+    right: 100px;
+    width: 10%;
+    padding: 0px;
+}
+span{
+   display: inline-block
+   position: relative;
+}
+
+.contain-demo {
+  margin: 5px auto;
+  text-align: center;
+  height: 400px;
+  width: 100%;
+  overflow: scroll;
+  align: middle;
+
+}
+
+</style>
+<body>
+
+
+<ul class="w3-navbar">
+<div class="panel panel-danger">
+<div class="panel-heading"><h4 class='danger'>This record is checked out &nbsp; <a href="http://cdi-utaps.test.utah.edu/crash/{{instance.ID}}/checkin/" style="align: right" class="btn btn-danger" role="button">I'm Done, Check Record In</a></h4></div>
+</ul>
+
+
+<ul class="w3-navbar w3-black">
+    <li><a href="#" onclick="openPage('Report View')"><strong>Report View</strong></a></li>
+    <li><a href="#" onclick="openPage('Vehicle')">Vehicle</a></li>
+    <li><a href="#" onclick="openPage('Person')">Person</a></li>
+    {% if queryset3 %}
+    <li><a href="#" onclick="openPage('UC')">UC</a></li>
+    {% endif %}
+   <z> <li><a href="" style="align: right" onclick="openWin()">Crash Location</a></li></z>
+</ul>
+<div id="Vehicle" class="w3-container page">
+  <h1>Vehicle</h1>
+<br></br>
+  {% if queryset %}
+    {% for instance in queryset %}
+          {% if instance.PS_case == data  %}
+<iframe width="100%" height="200"  src="{% url 'vehicle_edit' pk=instance.pk %}" alt=data frameborder="0" allowfullscreen></iframe>
+          {% endif %}
+    {% endfor %}
+  {% endif %}
+<h2> Add A Vehicle Record</h2>
+<iframe width="100%" height="200"  src='http://cdi-utaps.test.utah.edu/vehicle/new/' alt=data frameborder="0" allowfullscreen></iframe>
+  </div>
+<div id="Person" class="w3-container page">
+  <h1>Person</h1>
+<br></br>
+  {% if queryset2 %}
+  {% for instance in queryset2 %}
+        {% if instance.PS_case == data  %}
+         <iframe width="100%" height="200"  src="{% url 'person_edit' pk=instance.pk %}" alt=data frameborder="0" allowfullscreen></iframe>
+        {% endif %}
+  {% endfor %}
+{% endif %}
+<h2> Add A Person Record</h2>
+<iframe width="100%" height="200"  src='http://cdi-utaps.test.utah.edu/person/new/' alt=data frameborder="0" allowfullscreen></iframe>
+  </div>    
+
+
+<div id="UC" class="w3-container page">
+ 
+<br></br>
+  {% if queryset3 %}
+  {% for instance in queryset3 %}
+        {% if instance.PS_case == data  %}
+         <iframe width="100%" height="1000"  src="{% url 'uce' pk=instance.pk %}" alt=data frameborder="0" allowfullscreen></iframe>
+        {% endif %}
+  {% endfor %}
+{% endif %}
+</div>
+
+
+<div id="Crash" class="w3-container page">
+  <div class='w3-row'>
+  <div class='w3-col'>
+</div>
+</div>
+</div>
+
+
+{% if queryset4 %}
+  {% for inst in queryset4 %}
+
+<div id="Report View" class="w3-container page">
+
+<button type="button" class="btn btn-primary" onclick="M()">Restful Service</button>
+<z> <button type="button" class="btn btn-warning"onclick="Reload()">Validate Geolocation</button></z>
+
+
+ <h1>Crash Report #{{data}}{% if not queryset %}<strong>Not An Official Record</strong>{% endif %}</h1>
+  <div class='w3-row'>
+  <div class='w3-col'>
+  {% if title %}
+  <h1 class= '{% if title_align_center %}text-align-center{% endif %}'>{{title }}</h1>
+  {% endif %}
+  
+
+<br /> 
+{% if inst.address != instance.Main_Road_Name %}<label for="id_lat_lng" class="alert-success control-label ">
+          Latitude :{{inst.latitude}} Longitude:{{inst.longitude}}
+
+            </label> <div class="controls"> {% endif %}
+             
+<br />
+ 
+<form autocomplete="off" class="form-inline" method="post" action=''>{% csrf_token %}
+<div> 
+
+<input class='btn btn-danger' type='submit' value ='Submit' /></div>
+<br />
+     
+     
+        <div id="div_id_PS_case" class="form-group"> <label for="id_PS_case" class="control-label  requiredField">
+                PS case<span class="asteriskField">*</span> </label> <div class="controls "> <input class="numberinput form-control" id="id_PS_case" max="9223372036854775807" min="-9223372036854775808" name="PS_case" type="number" value="{{instance.PS_case}}" /> </div> </div> 
+
+<div id="div_id_Date" class="form-group"> <label for="id_Date" class="control-label ">
+                Date of Crash
+            </label> <div class="controls "> <input class="datetimeinput form-control" id="id_Date" name="Date_of_Crash" type="datetime" value="{{instance.Date_of_Crash}}"/> </div> </div>
+
+     
+<div id="div_id_Case_Number" class="form-group"> <label for="id_Case_Number" class="control-label ">
+                Case Number
+            </label> <div class="controls "> <input class="textinput textInput form-control" id="id_Case_Number" maxlength="20" name="Case_Number" type="text" value="{{instance.Case_Number}}" /> </div> </div>
+
+
+Latitude :{{inst.latitude}} Longitude:{{inst.longitude}}<div class='well'><div id='id_County_Code' class='form-group'><z>{% if inst.county_ID != instance.County_Code %} <label for='id_County_Code' class='alert-danger control-label '>County Code:&nbsp;<a class='btn btn-warning '> Restore <span class ='badge'><County> {{inst.county_ID}}</County></span></a><br /></label> {% endif %}</z><label for='id_County_Code' class='control-label '>County Code</label><div class='controls '><q7><input class='textinput textInput form-control' id='id_County_Code' maxlength='6' name='County_Code' type='text' value='2' /></q7></div> </div>
+
+ <div id='div_id_City' class='form-group'><z> {% if inst.city != instance.City %}<label for='id_City' class='alert-danger control-label '>City:&nbsp;<a class='btn btn-warning '> Restore <span class ='badge'><City> {{inst.city}}</City></span></a><br /></label>{% endif %}</z><label for='id_City' class='control-label '> City</label><div class='controls '><q8><input class='textinput textInput form-control' id='id_City' maxlength='20' name='City' type='text' value='{{instance.City}}' /></q8></div> </div>
+
+<div id='div_id_Road_Jurisdiction' class='form-group'> <label for='id_Road_Jurisdiction' class='control-label '>Road Jurisdiction</label> <div class='controls '> <input class='numberinput form-control' id='id_Road_Jurisdiction' name='Road_Jurisdiction' type='number' value='{{instance.Road_Jurisdiction}}' /> </div> </div>
+    
+<div id='div_id_Nearest_City' class='form-group'> <label for='id_Nearest_City' class='control-label '>Nearest City</label> <div class='controls '> <input autocomplete="off" class='textinput textInput form-control' id='id_Nearest_City' maxlength='25' name='Nearest_City' type='text' value='{{instance.Nearest_City}}'/></div></div>
+    
+    <div id='div_id_Direction' class='form-group'><z> {% if inst.direction != instance.Direction %}<label for='id_Direction' class='control-label '>Direction:&nbsp;<a class='btn btn-warning '> Restore <span class ='badge'><Direction> {{inst.direction}}</Direction></span></a><br /> </label>{% endif %}</z> <label for='id_Direction' class='control-label '>Direction</label> <div class='controls '><q2> <input class='textinput textInput form-control' id='id_Direction' maxlength='1' name='Direction' type='text' value='{{instance.Direction}}' /></q2></div></div>
+    
+    <div id='div_id_Main_Road_Name' class='form-group'><z> {% if inst.address != instance.Main_Road_Name %}<label for='id_Main_Road_Name' class='alert-danger control-label '>Main Road Name:&nbsp;<a class='btn btn-warning '> Restore <span class ='badge'><Main> {{instance.Main_Road_Name}}</Main></span></a><br /></label> {% endif %}</z><label for='id_Main_Road_Name' class='control-label '>Main Road Name</label><div class='controls '><q6><input class='textinput textInput form-control' id='id_Main_Road_Name' maxlength='30' name='Main_Road_Name' type='text' value='{{instance.Main_Road_Name}}' /></q6></div></div>
+    
+<div id='div_id_At_Intersection_With' class='form-group'> <label for='id_At_Intersection_With' class='control-label '>At Intersection With</label> <div class='controls '> <input class='textinput textInput form-control' id='id_At_Intersection_With' maxlength='25' name='At_Intersection_With' type='text' value='{{instance.At_Intersection_With}}'/></div></div>
+    
+<div id='div_id_Not_at_Intersection_Distance' class='form-group'> <label for='id_Not_at_Intersection_Distance' class='control-label '>Not at Intersection Distance</label> <div class='controls '> <input class='textinput textInput form-control' id='id_Not_at_Intersection_Distance' maxlength='8' name='Not_at_Intersection_Distance' type='text' value='{{instance.Not_at_Intersection_Distance}}' /></div></div>
+
+
+&nbsp;
+<div id='div_id_Not_at_Intersection_Direction' class='form-group'> <label for='id_Not_at_Intersection_Direction' class='control-label '>Not at Intersection Direction</label> <div class='controls '> <input class='textinput textInput form-control' id='id_Not_at_Intersection_Direction' maxlength='2' name='Not_at_Intersection_Direction' type='text' value='{{instance.Not_at_Intersection_Direction}}' /></div></div><div id='div_id_Nearest_Intersection' class='form-group'> <label for='id_Nearest_Intersection' class='control-label '>Nearest Intersection</label> <div class='controls '> <input autocomplete="off" class='textinput textInput form-control' id='id_Nearest_Intersection' maxlength='25' name='Nearest_Intersection' type='text' value='{{instance.Nearest_Intersection}}' /> </div> </div>
+    
+<div id='div_id_Ref_Post_Distance' class='form-group'> <label for='id_Ref_Post_Distance' class='control-label '>Ref Post Distance</label> <div class='controls '> <input class='textinput textInput form-control' id='id_Ref_Post_Distance' maxlength='8' name='Ref_Post_Distance' type='text' value='{{instance.Ref_Post_Distance}}' /></div></div><div id='div_id_Ref_Post_Direction' class='form-group'> <label for='id_Ref_Post_Direction' class='control-label '>Ref Post Direction</label> <div class='controls '> <input class='textinput textInput form-control' id='id_Ref_Post_Direction' maxlength='2' name='Ref_Post_Direction' type='text' value='{{instance.Ref_Post_Direction}}' /></div></div>
+    
+    <div id='div_id_Milepoint' class='form-group'><z> {% if inst.milepoint != instance.Milepoint %}<label for='id_Milepoint' class='alert-danger control-label '>Milepoint:&nbsp;<a class='btn btn-warning '> Restore <span class ='badge'><Mile> {{inst.milepoint}}</Mile></span></a><br /></label> {% endif %}</z><label for='id_Milepoint' class='control-label '>Milepoint</label> <div class='controls '><q1> <input class='textinput textInput form-control' id='id_Milepoint' maxlength='8' name='Milepoint' type='text' value='{{instance.Milepoint}}'/></q1></div> </div>
+    
+<div id='div_id_Ref_Post_Description' class='form-group'> <label for='id_Ref_Post_Description' class='control-label '>Ref Post Description</label> <div class='controls '> <input class='textinput textInput form-control' id='id_Ref_Post_Description' maxlength='25' name='Ref_Post_Description' type='text' value='{{instance.Ref_Post_Description}}' /></div></div></div>
+    
+    <div class='well'>
+
+<div id='div_id_Route' class='form-group'> <z> {% if inst.route_number != instance.Route %}<label for='id_Route' class='alert-danger control-label '>Route:&nbsp;<a class='btn btn-warning '> Restore <span class ='badge'><Route> {{inst.route_number}}</Route></span></a><br /></label>{% endif %}</z><label for='id_Route' class='control-label '>Route</label> <div class='controls '><q0> <input class='textinput textInput form-control' id='id_Route' maxlength='5' name='Route' type='text' value='{{instance.Route}}' /></q0> </div></div>
+
+
+
+    
+        <div id='div_id_Type' class='form-group'><label for='id_Type' class='control-label'>Type </label> <div class='controls '> <input class='textinput textInput form-control' id='id_Type' maxlength='1' name='Type' type='text' value='{{instance.Type}}' /></div></div><div id='div_id_Exit_Number' class='form-group'><z> {% if inst.exit_number != instance.Exit_Number %}<label for='id_Exit_Number' class='control-label '>Exit Number:&nbsp;<a class='btn btn-warning '> Restore <span class ='badge'><Exit> {{inst.exit_number}}</Exit></span></a><br /></label> {% endif %}</z><label for='id_Exit_Number' class='control-label '>Exit Number</label> <div class='controls '><q4><input class='numberinput form-control' id='id_Exit_Number' name='Exit_Number' type='number' value='{{instance.Exit_Number}}'/> </q4></div> </div>
+    
+        <div id='div_id_Ramp_ID' clAass='form-group'><z> {% if inst.ramp_ID != instance.Ramp_ID %} <label for='id_Ramp_ID' class='control-label '>Ramp ID:&nbsp;<a class='btn btn-warning '> Restore <span class ='badge'><Ramp> {{inst.ramp_ID}}</Ramp></span></a><br /></label>{% endif %}</z><label for='id_Ramp_ID' class='control-label '>Ramp ID</label> <div class='controls '> <q5><input class='textinput textInput form-control' id='id_Ramp_ID' maxlength='4' name='Ramp_ID' type='text' value='{{instance.Ramp_ID}}' /> </q5></div> </div></div><div>
+               
+
+
+
+ <div id="div_id_Crash_Severity" class="form-group"> <label for="id_Crash_Severity" class="control-label ">
+                Crash Severity
+            </label> <div class="controls "> <input class="numberinput form-control" id="id_Crash_Severity" name="Crash_Severity" type="number" value="{{instance.Crash_Severity}}" /> </div> </div> 
+      
+     <div id="div_id_Distance" class="form-group"> <label for="id_Distance" class="control-label ">
+                Distance
+            </label> <div class="controls "> <input class="numberinput form-control" id="id_Distance" name="Distance" type="number" value="{{instance.Distance}}" /> </div> </div> <div id="div_id_Manner_Collision" class="form-group"> <label for="id_Manner_Collision" class="control-label ">
+                Manner Collision
+            </label> <div class="controls "> <input class="textinput textInput form-control" id="id_Manner_Collision" maxlength="2" name="Manner_Collision" type="text" value="{{instance.Manner_Collision}}" /> </div> </div> 
+
+<div id="div_id_Road_Junction_Feature" class="form-group"> <label for="id_Road_Junction_Feature" class="control-label ">
+                Road Junction Feature
+            </label> <div class="controls "> <input class="numberinput form-control" id="id_Road_Junction_Feature" name="Road_Junction_Feature" type="number" value="{{instance.Road_Junction_Feature}}" /> </div> </div> 
+     
+      <div id="div_id_First_Harmful_Event" class="form-group"> <label for="id_First_Harmful_Event" class="control-label ">
+                First Harmful Event
+            </label> <div class="controls "> <input class="textinput textInput form-control" id="id_First_Harmful_Event" maxlength="2" name="First_Harmful_Event" type="text" value="{{instance.First_Harmful_Event}}" /> </div> </div> 
+    
+  <div id="div_id_Work_Zone_Location" class="form-group"> <label for="id_Work_Zone_Location" class="control-label ">
+                Work Zone Location
+            </label> <div class="controls "> <input class="numberinput form-control" id="id_Work_Zone_Location" name="Work_Zone_Location" type="number" value="{{instance.Work_Zone_Location}}" /> </div> </div> <div id="div_id_Work_Zone_ID" class="form-group"> <label for="id_Work_Zone_ID" class="control-label ">
+                Work Zone ID
+            </label> <div class="controls "> <input class="numberinput form-control" id="id_Work_Zone_ID" name="Work_Zone_ID" type="number" value="{{instance.Work_Zone_ID}}" /> </div> </div>
+
+
+<div id="div_id_Work_Zone_Related" class="form-group"> <label for="id_Work_Zone_Related" class="control-label ">
+                Work Zone Related
+            </label> <div class="controls "> <select class="nullbooleanselect form-control" id="id_Work_Zone_Related" name="Work_Zone_Related" >
+
+{% if instance.Work_Zone_Related == 3 %}
+<option value="{{instance.Work_Zone_Related}}">Yes</option>
+<option value="2">No</option>
+{% else %}
+<option value="{{instance.Work_Zone_Related}}">No</option>
+<option value="3">Yes</option>
+{% endif %}
+
+</select> </div> </div> <div id="div_id_Work_Zone_Worker_Present" class="form-group"> <label for="id_Work_Zone_Worker_Present" class="control-label ">
+                Work Zone Worker Present
+            </label> <div class="controls "> <select class="nullbooleanselect form-control" id="id_Work_Zone_Worker_Present" name="Work_Zone_Worker_Present">
+
+{% if instance.Work_Zone_Worker_Present == 3 %}
+<option value="{{instance.Work_Zone_Worker_Present}}">Yes</option>
+<option value="2">No</option>
+{% else %}
+<option value="{{instance.Work_Zone_Worker_Present}}">No</option>
+<option value="3">Yes</option>
+{% endif %}
+</select> </div> </div> <div id="div_id_Narrative" class="form-group"> <label for="id_Narrative" class="control-label ">
+                Narrative
+            </label> <div class="controls "> <textarea class="textarea form-control" cols="40" id="id_Narrative" name="Narrative" rows="10">{{instance.Narrative}}
+ </textarea> </div> </div> <div id="div_id_QC_Comments" class="form-group"> <label for="id_QC_Comments" class="control-label ">
+                QC Comments
+            </label> <div class="controls "> <textarea class="textarea form-control" cols="40" id="id_QC_Comments" name="QC_Comments" rows="10">{{instance.QC_Comments}}
+</textarea> </div> </div> <div id="div_id_Crash_Verified" class="form-group"> <label for="id_Crash_Verified" class="control-label ">
+                Crash Verified
+            </label> <div class="controls "> <select class="nullbooleanselect form-control" id="id_Crash_Verified" name="Crash_Verified">
+
+{% if instance.Crash_Verified == 1 %}
+<option value="{{instance.Crash_Verified}}">Yes</option>
+<option value="1">No</option>
+{% else %}
+<option value="{{instance.Crash_Verified}}">No</option>
+<option value="2">Yes</option>
+{% endif %}
+</select> </div> </div>
+
+
+  <br />
+<br><br>
+
+
+
+
+
+
+
+<br></br>
+{% endfor %}
+{% endif %}
+
+
+
+  </form>
+<br></br>
+</div>
+</div>
+
+
+
+<button id="zoom">Zoom in</button>
+<button id="zoom2">Zoom out</button>
+<button id="zoom0">Reset zoom</button>
+<br><br>
+<div id="mydiv" class="contain-demo">
+  <svg id="svgArea" width="1200" height="900" version="1.1" viewBox="0 0 1200 900">
+     <foreignObject width="1200" height="900">
+        <iframe src="https://utaps1.utaps-data.utah.edu/sqlImage/webform2?id={{data}}.png" style="width: 100%; height: 100%;">
+        </iframe>
+    </foreignObject>
+  </svg>
+</div>
+
+</div>
+
+
+  <table class="w3-table w3-striped w3-bordered">
+  <thead class="w3-black"><th style="width:30%">Vehicle</th><th>Make</th><th>Model</th><th>Travel Direction</th><th>Vehicle Maneuver</th><th>Traffic Control</th></thead>
+  {% if queryset %}
+    {% for instance in queryset %}
+          {% if instance.PS_case == data  %}
+        <tr><td>{{ instance.Vehicle_Number }}</td><td>
+          {{instance.Make}}</td><td>{{instance.Vehicle_Model}}</td><td> {{instance.Travel_Direction}}</td><td>{{instance.Vehicle_Maneuver}}</td><td>{{ instance.Traffic_Control_Device}}</td></tr>
+          {% endif %}
+    {% endfor %}
+      </table>
+  {% endif %}
+  </table>
+<br></br>
+  <table class="w3-table w3-striped w3-bordered">
+  <thead class="w3-black"><th style="width:30%">Person</th><th>First Name</th><th>Middle Name</th><th>Last Name</th><th>Sex</th><th>Date Of Birth</th><th>Age</th><th>Driver Condition</th><th>Injury Level</th></thead>
+  {% if queryset2 %}
+  {% for instance in queryset2 %}
+        {% if instance.PS_case == data  %}
+      <tr><td>{{ instance.Person_Type }}</td><td>{{instance.Name_First}}</td><td>{{instance.Name_Middle}}</td><td>{{instance.Name_Last}}</td><td>
+        {{instance.Sex}}</td><td>{{instance.Date_Of_Birth}}</td><td> {{instance.Age}}</td><td>{{instance.Driver_Condition}}</td><td>{{instance.Injury_Level}}</td></tr>
+        {% endif %}
+  {% endfor %}
+    </table>
+{% endif %}
+  </table>
+<div class="panel-body">
+
+<script language="javascript">
+openPage("Report View")
+function openPage(cityName) {
+    var i;
+    var x = document.getElementsByClassName("page");
+    for (i = 0; i < x.length; i++) {
+       x[i].style.display = "none";
+    }
+    document.getElementById(cityName).style.display = "block";
+}
+    
+
+function M() {
+    $("z").toggle();
+}
+    
+    
+    
+    
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+  $("h2").click(function() {
+    $(this).next().slideToggle(300);
+  });  
+  $("Route").click(function(){
+    $("q0").replaceWith("<input class='textinput textInput form-control' id='id_Route' maxlength='5' name='Route' type='text' value="+$(this).text()+" />");
+  });
+  $("Mile").click(function(){
+    $("q1").replaceWith("<input class='textinput textInput form-control' id='id_Milepoint' maxlength='8' name='Milepoint' type='text' value="+$(this).text()+" />");
+  });
+  $("Direction").click(function(){
+    $("q2").replaceWith("<input class='textinput textInput form-control' id='id_Direction' maxlength='1' name='Direction' type='text' value="+$(this).text()+" />");
+  });
+  $("Exit").click(function(){
+    $("q4").replaceWith("<input class='numberinput form-control' id='id_Exit_Number' name='Exit_Number' type='number'value="+$(this).text()+" />");
+  });
+  $("Ramp").click(function(){
+    $("q5").replaceWith("<input class='textinput textInput form-control' id='id_Ramp_ID' maxlength='4' name='Ramp_ID' type='text' value="+$(this).text()+" />");
+  });
+  $("Main").click(function(){
+    $("q6").replaceWith("<input class='textinput textInput form-control' id='id_Main_Road_Name' maxlength='30' name='Main_Road_Name' type='text' value="+$(this).text()+" />");
+  });
+  $("County").click(function(){
+    $("q7").replaceWith("<input class='textinput textInput form-control' id='id_County_Code' maxlength='6' name='County_Code' type='text' value="+$(this).text()+" />");
+  });
+  $("City").click(function(){
+    $("q8").replaceWith("<input class='textinput textInput form-control' id='id_City' maxlength='20' name='City' type='text' value="+$(this).text()+" />");
+  });
+
+});
+var myWindow;
+
+{% if queryset4 %}
+ {% for instance in queryset4 %}
+
+function FindLeftScreenBoundry()
+{
+    if (window.leftWindowBoundry() > window.screen.width)
+    {
+        return window.leftWindowBoundry();
+    }
+    if (window.leftWindowBoundry() < 0 && window.leftWindowBoundry() > (window.screen.width * -1))
+    {
+        return (window.screen.width * 2);
+    }
+    return 0;
+}
+window.leftScreenBoundry = FindLeftScreenBoundry;
+
+
+function openWin() {
+    myWindow = window.open("http://cdi-utaps.test.utah.edu/g/"+{{instance.id}}+"/edit","_blank","resizable=1, scrollbars=1, fullscreen=0, height=auto, width=auto, screenX=' + window.leftScreenBoundry() + ' , left=' + window.leftScreenBoundry() + ', toolbar=0, menubar=0, status=1");
+}
+{% endfor %}{% endif %}
+
+function myFunction() {
+    if (document.getElementById("myCheck").checked){
+        $("g").append("<a href=''><button type='button' class='btn btn-info'>Submit</button></a>");
+
+}
+    else{
+        var x ="To proceed with the changes please check the box";
+        document.getElementById("demo").innerHTML = x;}
+}
+
+function Reload() {
+   location.reload();
+}
+
+$(".btn btn-warning").click(function(){
+      $("w").slideDown();
+});
+
+var  zoomBtn = document.getElementById("zoom");
+var  zoomBtn2 = document.getElementById("zoom2");
+var  zoomBtn3 = document.getElementById("zoom0");
+var  a = document.getElementById("svgArea");
+
+
+
+
+zoomBtn.addEventListener("click", function(e) {
+
+	 var b = parseInt(a.getAttribute("width"));
+     var c = String(Math.min(3000,b+100));
+     a.setAttribute("width",c);
+     a.setAttribute("height",c);
+
+});
+zoomBtn2.addEventListener("click", function(e) {
+
+     var b = parseInt(a.getAttribute("width"));
+     var c = String(Math.max(800,b-100));
+     a.setAttribute("width",c);
+     a.setAttribute("height",c);
+});
+zoomBtn3.addEventListener("click", function(e) {
+
+     a.setAttribute("width","1300");
+     a.setAttribute("height","1300");
+});
+
+
+
+
+</script>
+</div>
+<br></br>
+<footer class="w3-container w3-black">
+<h5><p align='center'>Utah Transportation and Public Safety - Crash Data Initiative</p>
+</h5>
+</footer>
+<div class="w3-row-padding">
+<div class="right"><img src='http://cdi-utaps.test.utah.edu/static/admin/img/udot 2-2.png' class='img-resposive'/></div>
+<div class="left"><img src='http://cdi-utaps.test.utah.edu/static/admin/img/UofU-logo-2.png' class='img-resposive'/></div>
+<div class="center"><img src='http://cdi-utaps.test.utah.edu/static/admin/img/header-dps-logo-2.png' class='img-resposive'/></div>
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

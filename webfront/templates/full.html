@@ -39,11 +39,13 @@
   <thead>
   <tr>
     <th data-dynatable-column="ID">ID</th>
+    <th data-dynatable-column="Assigned">Assigned</th>
     <th data-dynatable-column="PS_Case_ID">PS Case</th>
     <th data-dynatable-column="Date_of_Crash">Date of Crash</th>
     <th data-dynatable-column="Main_Road_Name">Road Name</th>
     <th data-dynatable-column="City">City</th>
     <th data-dynatable-column="Crash_Verified">Crash_Verified</th>
+    <th data-dynatable-column="Private_Property">Private Property</th>
     <th data-dynatable-column="Narrative">Narrative</th>
 
   </tr>
@@ -58,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
    
   $.ajax({
     type: 'GET',
-    url: 'http://surferbrend.pythonanywhere.com/api/queryall/?format=json',
+    url: 'http://cdi-utaps.test.utah.edu/api/queryall/?format=json',
     success: function(orders) {
     				
             var dynatable = $('#my-final-table').dynatable({
@@ -77,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       $("#my-final-table").children().children().addClass("fila_art");
   };
   
-  $.getJSON('http://surferbrend.pythonanywhere.com/api/query/?format=json',
+  $.getJSON('http://cdi-utaps.test.utah.edu/api/query/?format=json',
             function (data) {                
     
     var dynatable = $('#my-final-table').data('dynatable');                
@@ -96,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   processingComplete();
 
   $('tbody').on('click', '.fila_art' ,function(){
-      window.open("http://surferbrend.pythonanywhere.com/crash/" + $(this).children().eq(0).text() + "/edit/");
+      window.open("http://cdi-utaps.test.utah.edu/crash/" + $(this).children().eq(0).text() + "/edit/");
   });
 });
 </script>  

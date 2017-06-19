@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/1.10/howto/deployment/wsgi/
 
 import os, sys
 
-path='/home/surferbrend/mysite'
+path='/var/www/html/mysite'
 if path not in sys.path:
     sys.path.append(path)
 

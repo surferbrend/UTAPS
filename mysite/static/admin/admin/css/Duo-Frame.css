@@ -1,0 +1,10 @@
+body {
+    text-align: center;
+}
+
+iframe {
+    width: 100%;
+    min-width: 500px;
+    max-width: 1000px;
+    height: 500px;
+}

@@ -1,0 +1,86 @@
+
+<html>
+
+
+{% load staticfiles %}
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3-theme-black.css">
+<link href='https://fonts.googleapis.com/css?family=RobotoDraft' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css"><style>
+html,body,h1,h2,h3,h4,h5 {font-family: "RobotoDraft","Roboto",sans-serif;}
+.w3-sidenav a {padding:16px;font-weight:bold}
+
+table, td, th {    
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 15px;
+}
+
+
+</style>
+
+
+<table class="w3-table w3-striped w3-bordered">
+<thead class="w3-black"><th>UpdateTime</th><th>User ID Old</th><th>User ID</th><th>PS Case</th><th>Make OLD</th><th>Make</th><th>Vehicle Maneuver OLD</th><th>Vehicle Maneuver</th>
+<th>Vehicle Number OLD</th><th>Vehicle Number</th><th>Vin Verified OLD</th><th>Vin Verified</th><th><th>License Plate Number OLD</th><th>License Plate Number</th><th>License Plate State OLD</th>
+<th>License Plate State</th><th>Motor Vehicle Body OLD</th><th>Motor Vehicle Body</th><th>Trailing Units OLD</th><th>Trailing Units</th><th>Cargo Body Type OLD</th>
+<th>Cargo Body Type</th><th>Special Function Code OLD</th><th>Special Function Code</th><th>First Event OLD</th><th>First Event</th>
+<th>Second Event OLD</th><th>Second Event</th><th>Third Event OLD</th><th>Third Event</th>
+<th>Fourth Event OLD</th><th>Fourth Event</th><th>Roadway Description OLD</th><th>Roadway Description</th><th>Disposition Of Vehicle OLD</th><th>Disposition Of Vehicle</th>
+<th>Towed By OLD</th><th>Towed By</th><th>Carrier Name OLD</th><th>Carrier Name</th><th>US DOT Number OLD</th><th>US DOT Number</th><th>US DOT Verified OLD</th>
+<th>US DOT Verified</th><th>GCWR GVWR OLD</th><th>GCWR GVWR</th><th>Carrier Address Street OLD</th><th>Carrier Address Street</th><th>Carrier Address Street2 OLD</th>
+<th>Carrier Address Street2</th><th>Carrier Address City OLD</th><th>Carrier Address City</th><th>Carrier Address State OLD</th><th>Carrier Address State</th>
+<th>Carrier Address Zip OLD</th><th>Carrier Address Zip</th><th>Carrier Address County OLD</th><th>Carrier Address County</th><th>Carrier Address Phone OLD</th>
+<th>Carrier Address Phone</th><th>Is Drive Carrier OLD</th><th>Is Drive Carrier</th><th>Interstate OLD</th><th>Interstate</th><th>Cargo Code OLD</th><th>Cargo Code</th>
+<th>Hazmat Released OLD</th><th>Hazmat Released</th><th>Hazmat Placard Number OLD</th><th>Hazmat Placard Number</th><th>Is Owner Driver OLD</th><th>Is Owner Driver</th>
+<th>Owner First OLD</th><th>Owner First</th><th>Owner Middle OLD</th><th>Owner Middle</th><th>Owner Last OLD</th><th>Owner Last</th><th>Owner Address Street OLD</th>
+<th>Owner Address Street</th><th>Owner Address Street2 OLD</th><th>Owner Address Street2</th>
+<th>Owner Address City OLD</th><th>Owner Address City</th><th>Owner Address State OLD</th><th>Owner Address State</th><th>Owner Address Zip OLD</th><th>Owner Address Zip</th>
+<th>Owner Address Phone OLD</th><th>Owner Address Phone</th><th>Travel Direction OLD</th><th>Travel Direction</th><th>Traffic Control Device OLD</th>
+<th>Traffic Control Device</th><th>Driver Condition OLD</th><th>Driver Condition</th></thead>
+
+
+
+ {% for post in posts %}
+     <tr><td>{{post.UpdateTime}}</td><td>{{post.user_id_OLD}}</td><td>{{post.user_id}}</td><td>{{post.PS_case}}</td><td>{{post.Make_OLD}}</td><td>{{post.Make}}</td>
+<td>{{post.Vehicle_Maneuver_OLD}}</td><td>{{post.Vehicle_Maneuver}}</td><td>{{post.Vehicle_Number_OLD}}</td><td>{{post.Vehicle_Number}}</td><td>{{post.Vin_Verified_OLD}}</td>
+<td><td>{{post.Vin_Verified}}</td><td>{{post.License_Plate_Number_OLD}}</td><td>{{post.License_Plate_Number}}</td><td>{{post.Motor_Vehicle_Body_OLD}}</td><td>{{post.Motor_Vehicle_Body}}</td>
+<td>{{post.Trailing_Units_OLD}}</td><td>{{post.Trailing_Units}}</td><td>{{post.Cargo_Body_Type_OLD}}</td><td>{{post.Cargo_Body_Type}}</td><td>{{post.Special_Function_Code_OLD}}</td>
+<td>{{post.Special_Function_Code}}</td><td>{{post.First_Event_OLD}}</td><td>{{post.First_Event}}</td><td>{post.Second_Event_OLD}}</td><td>{{post.Second_Event}}</td>
+<td>{{post.Third_Event_OLD}}</td><td>{{post.Third_Event}}</td><td>{{post.Fourth_Event_OLD}}</td><td>{{post.Fourth_Event}}</td><td>{{post.Roadway_Description_OLD}}</td>
+<td>{{post.Roadway_Description}}</td><td>{{post.Disposition_Of_Vehicle_OLD}}</td><td>{{post.Disposition_Of_Vehicle}}</td><td>{{post.Towed_By_OLD}}</td><td>{{post.Towed_By}}</td>
+<td>{{post.Carrier_Name_OLD}}</td><td>{{post.Carrier_Name}}</td><td>{{post.US_DOT_Number_OLD}}</td><td>{{post.US_DOT_Number}}</td><td>{{post.US_DOT_Verified_OLD}}</td><td>{{post.US_DOT_Verified}}</td>
+<td>{{post.GCWR_GVWR_OLD}}</td><td>{{post.GCWR_GVWR}}</td><td>{{post.Carrier_Address_Street_OLD}}</td><td>{{post.Carrier_Address_Street}}</td><td>{{post.Carrier_Address_Street2_OLD}}</td>
+<td>{{post.Carrier_Address_Street2}}</td><td>{{post.Carrier_Address_City_OLD}}</td><td>{{post.Carrier_Address_City}}</td><td>{{post.Carrier_Address_State_OLD}}</td><td>{{post.Carrier_Address_State}}</td>
+<td>{{post.Carrier_Address_Zip_OLD}}</td><td>{{post.Carrier_Address_Zip}}</td><td>{{post.Carrier_Address_County_OLD}}</td><td>{{post.Carrier_Address_County}}</td><td>{{post.Carrier_Address_County}}</td>
+<td>{{post.Carrier_Address_Phone_OLD}}</td><td>{{post.Carrier_Address_Phone}}</td><td>{{post.Is_Driver_Carrier_OLD}}</td><td>{{post.Is_Driver_Carrier}}</td><td>{{post.Interstate_OLD}}</td>
+<td>{{post.Interstate}}</td><td>{{post.Cargo_Code_OLD}}</td><td>{{post.Cargo_Code}}</td><td>{{post.Hazmat_Released_OLD}}</td><td>{{post.Hazmat_Released}}</td><td>{{post.Hazmat_Placard_Number_OLD}}</td>
+<td>{{post.Hazmat_Placard_Number}}</td><td>{{post.Is_Owner_Driver_OLD}}</td><td>{{post.Is_Owner_Driver}}</td><td>{{post.Owner_First_OLD}}</td><td>{{post.Owner_First}}</td>
+<td>{{post.Owner_Middle_OLD}}</td><td>{{post.Owner_Middle}}</td><td>{{post.Owner_Last_OLD}}</td><td>{{post.Owner_Last}}</td><td>{{post.Owner_Address_Street_OLD}}</td><td>{{post.Owner_Address_Street}}</td>
+<td>{{post.Owner_Address_Street2_OLD}}</td><td>{{post.Owner_Address_Street2}}</td><td>{{post.Owner_Address_City_OLD}}</td><td>{{post.Owner_Address_City}}</td><td>{{post.Owner_Address_State_OLD}}</td>
+<td>{{post.Owner_Address_State}}</td><td>{{post.Owner_Address_Zip_OLD}}</td><td>{{post.Owner_Address_Zip}}</td><td>{{post.Owner_Address_Phone_OLD}}</td><td>{{post.Owner_Address_Phone}}</td>
+<td>{{post.Travel_Direction_OLD}}</td><td>{{post.Travel_Direction}}</td><td>{{post.Traffic_Control_Device_OLD}}</td><td>{{post.Traffic_Control_Device}}</td><td>{{post.Driver_Condition_OLD}}</td>
+<td>{{post.Driver_Condition}}</td></tr>
+
+  {% endfor %}
+  </table>
+
+
+</html>
+
+
+
+
+

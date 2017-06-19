@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %}
+{% include 'head_css.html' %}
+{% include 'navbar.html' %}
+<head>
+  <title>UTAPS Audit</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+  <script src="{% static "js/jquery-2.2.0.min.js" %}"></script>
+  <script src="{% static "js/table2csv.js" %}"></script>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+   
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+
+.button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 25px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 12px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myUL {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#myUL li a {
+  border: 1px solid #ddd;
+  margin-top: -1px; /* Prevent double borders */
+  background-color: #f6f6f6;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
+  display: block
+}
+
+#myUL li a.header {
+  background-color: #e2e2e2;
+  cursor: default;
+}
+
+#myUL li a:hover:not(.header) {
+  background-color: #eee;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+#myUL li a.tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+div.panel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.6s ease-in-out;
+    opacity: 0;
+}
+
+div.panel.show {
+    opacity: 1;
+    max-height: 500px;
+}
+</style>
+</head>
+<body>
+<div id="jquery-script-menu">
+<div class="jquery-script-center">
+<div class="jquery-script-clear"></div>
+
+
+<div class="col-sm-12">
+
+      <div class="well">
+
+        <button id="dl" class="btn btn-primary"><a href='#'></a>Crash Audit Records</button>
+        <button id="d2" class="btn btn-primary"><a href='#'></a>Vehicle Audit Records</button>
+        <button id="d3" class="btn btn-primary"><a href='#'></a>Person Audit Records</button>
+   </div>
+</div>
+
+
+<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+<ul id="myUL">
+  <li><a href="#" class="header"><h2> Crash Audit Records</h2>
+  <tr><th><strong>Analyst |</strong></th><th> PS Case |</th><th><strong> Updated Date |</strong></th><th>  Updated Fields:</th></tr></a></li>
+  {% if queryset %}
+  {% for instance in queryset %}
+  <li><a href="{% url 'audit-crash' pk=instance.pk %}" target="_parent"><td><strong>{{instance.User_last}} |</strong></td><td> {{instance.PS_case}} |</td><td><strong> {{instance.UpdatedTime}} |</strong></td></td>
+
+{% if instance.Date_of_Crash_OLD != instance.Date_of_Crash %}
+<td> Date of Crash, </td>
+{% endif %}
+
+{% if instance.County_Code_OLD != instance.County_Code %}
+<td> County Code,</td>
+{% endif %}
+
+{% if instance.Exit_Number_OLD != instance.Exit_Number %}
+<td> Exit Number,</td>
+{% endif %}
+
+{% if instance.Ramp_ID_OLD != instance.Ramp_ID %}
+<td> Distance,</td>
+{% endif %}
+
+{% if instance.Crash_Severity_OLD != instance.Crash_Severity %}
+<td> Crash Severity,</td>
+{% endif %}
+
+{% if instance.Nearest_City_OLD != instance.Nearest_City %}
+<td> Nearest City,</td>
+{% endif %}
+
+{% if instance.Distance_OLD != instance.Distance %}
+<td> Distance,</td>
+{% endif %}
+
+{% if instance.Manner_Collision_OLD != instance.Manner_Collision %}
+<td> Manner of Collision,</td>
+{% endif %}
+
+{% if instance.Main_Road_Name_OLD != instance.Main_Road_Name %}
+<td> Main Road Name,</td>
+{% endif %}
+
+{% if instance.Road_Junction_Feature_OLD != instance.Road_Junction_Feature %}
+<td> Road Junction Feature,</td>
+{% endif %}
+
+{% if instance.At_Intersection_With_OLD != instance.At_Intersection_With %}
+<td> At Interestion With,</td>
+{% endif %}
+
+{% if instance.First_Harmful_Event_OLD != instance.First_Harmful_Event %}
+<td> First Harmful Event,</td>
+{% endif %}
+
+{% if instance.Not_At_Intersection_Distance_OLD != instance.Not_At_Intersection_Distance %}
+<td> Not At Intersection Distance,</td>
+{% endif %}
+
+{% if instance.Nearest_Intersection_OLD != instance.Nearest_Intersection %}
+<td> Nearest Intersection,</td>
+{% endif %}
+
+{% if instance.Ref_Post_Distance_OLD != instance.Ref_Post_Distance %}
+<td> Ref Post Distance,</td>
+{% endif %}
+
+{% if instance.Ref_Post_Direction_OLD != instance.Ref_Post_Direction %}
+<td> Ref Post Direction,</td>
+{% endif %}
+
+{% if instance.Ref_Post_Description_OLD != instance.Ref_Post_Description %}
+<td> Ref Post Description,</td>
+{% endif %}
+
+{% if instance.Work_Zone_Related_OLD != instance.Work_Zone_Related %}
+<td> Work Zone Related,</td>
+{% endif %}
+
+{% if instance.Work_Zone_Worker_Present_OLD != instance.Work_Zone_Worker_Present %}
+<td> Work Zone Worker Present,</td>
+{% endif %}
+
+{% if instance.Work_Zone_ID_OLD != instance.Work_Zone_ID %}
+<td> Work Zone ID,</td>
+{% endif %}
+
+{% if instance.Work_Zone_Location_OLD != instance.Work_Zone_Location %}
+<td> Work Zone Location,</td>
+{% endif %}
+
+{% if instance.Unconfirmed_Fatality_Report_OLD != instance.Unconfirmed_Fatality_Report %}
+<td> Unconfirmed Fatality Report,</td>
+{% endif %}
+
+{% if instance.Light_Condition_OLD != instance.Light_Condition %}
+<td> Light Condition,</td>
+{% endif %}
+
+{% if instance.Road_Surface_Condition_OLD != instance.Road_Surface_Condition %}
+<td> Road Surface Condition,</td>
+{% endif %}
+
+{% if instance.Weather_Condition_OLD != instance.Weather_Condition %}
+<td> Weather Condition</td>
+{% endif %}
+
+  {% endfor %}
+{% endif %}
+</a></li>
+
+  <li><a href="#" class="header"><h2>Vehicle Audit Records</h2>
+  <th><strong>Analyst |</strong></th><th>PS Case |</th><th><strong>Updated Date |</strong></th><th>Updated Fields: |</th></a></li>
+  {% if queryset1 %}
+  {% for instance in queryset1 %}
+  <li><a href="{% url 'audit-vehicle' pk=instance.pk %}" target="_parent"><td><strong>{{instance.user_id}} |</strong></td><td> {{instance.PS_case}} |</td><td><strong>{{instance.UpdatedTime}} |</strong></td>
+{% if instance.Make_OLD != instance.Make %}
+<td> Make,</td>
+{% endif %}
+
+{% if instance.Vehicle_Maneuver_OLD != instance.Vehicle_Maneuver %}
+<td> Vehicle Maneuver,</td>
+{% endif %}
+
+{% if instance.Vehicle_Number_OLD != instance.Vehicle_Number %}
+<td> Vehicle Number,</td>
+{% endif %}
+
+{% if instance.Vin_Verified_OLD != instance.Vin_Verified %}
+<td> Vin Verified,</td>
+{% endif %}
+
+{% if instance.License_Plate_Number_OLD != instance.License_Plate_Number %}
+<td> License Plate Number,</td>
+{% endif %}
+
+{% if instance.Motor_Vehicle_Body_OLD != instance.Motor_Vehicle_Body %}
+<td> Motor Vehicle Body,</td>
+{% endif %}
+
+{% if instance.Trailing_Units_OLD != instance.Trailing_Units %}
+<td> Trailing Units,</td>
+{% endif %}
+
+{% if instance.Cargo_Body_Type_OLD != instance.Cargo_Body_Type %}
+<td> Cargo Body,</td>
+{% endif %}
+
+{% if instance.Special_Function_Code_OLD != instance.Special_Function_Code %}
+<td> Special Function Code,</td>
+{% endif %}
+
+{% if instance.First_Event_OLD != instance.First_Event %}
+<td> First Event,</td>
+{% endif %}
+
+{% if instance.Second_Event_OLD != instance.Second_Event %}
+<td> Second Event,</td>
+{% endif %}
+
+{% if instance.Third_Event_OLD != instance.Third_Event %}
+<td> Third Event,</td>
+{% endif %}
+
+{% if instance.Fourth_Event_OLD != instance.Fourth_Event %}
+<td> Fourth Event,</td>
+{% endif %}
+
+{% if instance.Roadway_Description_OLD != instance.Roadway_Description %}
+<td> Roadway Description,</td>
+{% endif %}
+
+{% if instance.Disposition_Of_Vehicle_OLD != instance.Disposition_Of_Vehicle %}
+<td> Disposition of Vehicle,</td>
+{% endif %}
+
+{% if instance.Towed_By_OLD != instance.Towed_By %}
+<td> Towed By,</td>
+{% endif %}
+
+{% if instance.Carrier_Name_OLD != instance.Carrier_Name %}
+<td> Carrier Name,</td>
+{% endif %}
+
+{% if instance.US_DOT_Number_OLD != instance.US_DOT_Number %}
+<td> US DOT #,</td>
+{% endif %}
+
+{% if instance.US_DOT_Verified_OLD != instance.US_DOT_Verified %}
+<td> US DOT Verified,</td>
+{% endif %}
+
+{% if instance.GCWR_GVWR_OLD != instance.GCWR_GVWR%}
+<td> GCWR GVWR,</td>
+{% endif %}
+
+{% if instance.Carrier_Address_Street_OLD != instance.Carrier_Address_Street %}
+<td> Carrier Address Street,</td>
+{% endif %}
+
+{% if instance.Carrier_Address_Street2_OLD != instance.Carrier_Address_Street2 %}
+<td> Carrier Address Street2,</td>
+{% endif %}
+
+{% if instance.Carrier_Address_City_OLD != instance.Carrier_Address_City %}
+<td> Carrier Address City,</td>
+{% endif %}
+
+{% if instance.Carrier_Address_State_OLD != instance.Carrier_Address_State %}
+<td> Carrier Address State,</td>
+{% endif %}
+
+{% if instance.Carrier_Address_Zip_OLD != instance.Carrier_Address_Zip %}
+<td> Carrier Address Zip,</td>
+{% endif %}
+
+{% if instance.Carrier_Address_County_OLD != instance.Carrier_Address_County %}
+<td> Carrier Address County,</td>
+{% endif %}
+
+{% if instance.Carrier_Address_Phone_OLD != instance.Carrier_Address_Phone %}
+<td> Carrier Address Phone,</td>
+{% endif %}
+
+{% if instance.Is_Driver_Carrier_OLD != instance.Is_Driver_Carrier %}
+<td> Is Driver Carrier,</td>
+{% endif %}
+
+{% if instance.Interstate_OLD != instance.Interstate %}
+<td> Interstate,</td>
+{% endif %}
+
+{% if instance.Cargo_Code_OLD != instance.Cargo_Code %}
+<td> Cargo Code,</td>
+{% endif %}
+
+{% if instance.Hazmat_Released_OLD != instance.Hazmat_Released %}
+<td> Hazamat Released,</td>
+{% endif %}
+
+{% if instance.Hazmat_Placard_Number_OLD != instance.Hazmat_Placard_Number %}
+<td> Hazmat Placard #,</td>
+{% endif %}
+
+{% if instance.Is_Owner_Driver_OLD != instance.Is_Owner_Driver %}
+<td> Is Owner Driver,</td>
+{% endif %}
+
+{% if instance.Owner_First_OLD != instance.Owner_First %}
+<td> Owner First,</td>
+{% endif %}
+
+{% if instance.Owner_Middle_OLD != instance.Owner_Middle %}
+<td> Owner Middle,</td>
+{% endif %}
+
+{% if instance.Owner_Last_OLD != instance.Owner_Last %}
+<td> Owner Last,</td>
+{% endif %}
+
+{% if instance.Owner_Address_Street_OLD != instance.Owner_Address_Street %}
+<td> Owner Address Street,</td>
+{% endif %}
+
+{% if instance.Owner_Address_Street2_OLD != instance.Owner_Address_Street2 %}
+<td> Owner Address Street2,</td>
+{% endif %}
+
+{% if instance.Owner_Address_City_OLD != instance.Owner_Address_City %}
+<td> Owner Address City,</td>
+{% endif %}
+
+{% if instance.Owner_Address_State_OLD != instance.Owner_Address_State %}
+<td> Owner Address State,</td>
+{% endif %}
+
+{% if instance.Owner_Address_Zip_OLD != instance.Owner_Address_Zip %}
+<td> Owner Address Zip,</td>
+{% endif %}
+
+{% if instance.Owner_Address_Phone_OLD != Owner.Carrier_Address_Phone %}
+<td> Owner Address Phone,</td>
+{% endif %}
+
+{% if instance.Travel_Direction_OLD != instance.Travel_Direction %}
+<td> Travel Direction,</td>
+{% endif %}
+
+{% if instance.Traffic_Control_Device_OLD != instance.Traffic_Control_Device %}
+<td> Traffic Control Device,</td>
+{% endif %}
+
+{% if instance.Driver_Condition_OLD != instance.Driver_Condition %}
+<td> Driver Condition</td>
+{% endif %}
+</a></li>
+
+  {% endfor %}
+{% endif %}
+
+  <li><a href="#" class="header"><h2>Person Audit Records</h2>
+  <th><strong>Analyst |</strong></th><th>PS Case |</th><th><strong>Updated Date |</strong></th><th>Updated Fields: |</th></a></li>
+  {% if queryset2 %}
+  {% for instance in queryset2 %}
+
+  <li><a href="{% url 'audit-person' pk=instance.pk %}" target="_parent"><td><strong>{{instance.user_id}} |</strong></td><td>{{instance.PS_case}} |</td><td><strong>{{instance.UpdatedTime}} |</strong></td>
+
+{% if instance.Name_Last_OLD != instance.Name_Last %}
+<td> Last Name,</td>
+{% endif %}
+
+{% if instance.Name_First_OLD != instance.Name_First %}
+<td> First Name,</td>
+{% endif %}
+
+{% if instance.Name_Middle_OLD != instance.Name_Middle %}
+<td> Middle Name,</td>
+{% endif %}
+
+{% if instance.Sex_OLD != instance.Sex %}
+<td> Sex,</td>
+{% endif %}
+
+{% if instance.Date_Of_Birth_OLD != instance.Date_Of_Birth %}
+<td> Date of Birth,</td>
+{% endif %}
+
+{% if instance.Age_OLD != instance.Age %}
+<td> Age,</td>
+{% endif %}
+
+{% if instance.Address_Street_OLD != instance.Address_Street %}
+<td> Address Street,</td>
+{% endif %}
+
+{% if instance.Address_Street2_OLD != instance.Address_Street2 %}
+<td> Address Street (Continued),</td>
+{% endif %}
+
+{% if instance.Address_City_OLD != instance.Address_City %}
+<td> Address City,</td>
+{% endif %}
+
+{% if instance.Address_State_OLD != instance.Address_State %}
+<td> Address State,</td>
+{% endif %}
+
+{% if instance.Address_Zip_OLD != instance.Address_Zip %}
+<td> Address Zip,</td>
+{% endif %}
+
+{% if instance.Address_County_OLD != instance.Address_County %}
+<td> Address County,</td>
+{% endif %}
+
+{% if instance.Phone_OLD != instance.Phone %}
+<td> Phone #,</td>
+{% endif %}
+
+{% if instance.Dl_Number_OLD != instance.Dl_Number %}
+<td> Driver License #,</td>
+{% endif %}
+
+{% if instance.Dl_State_OLD != instance.Dl_State %}
+<td> Driver License State,</td>
+{% endif %}
+
+{% if instance.Dl_Class != instance.Dl_Class_OLD %}
+<td> Driver License Class,</td>
+{% endif %}
+
+{% if instance.CDL_Presented_At_Scene_OLD != instance.CDL_Presented_At_Scene %}
+<td> CDL Presented At Scene,</td>
+{% endif %}
+
+{% if instance.Injury_Level_OLD != instance.Injury_Level %}
+<td> Injury Level,</td>
+{% endif %}
+
+{% if instance.Charge_OLD != instance.Charge %}
+<td> Charge,</td>
+{% endif %}
+
+{% if instance.Status_Code_OLD != instance.Status_Code %}
+<td> Status Code,</td>
+{% endif %}
+
+{% if instance.Person_Type_OLD != instance.Person_Type %}
+<td> Person Type,</td>
+{% endif %}
+
+{% if instance.Vehicle_Number_OLD != instance.Vehicle_Number %}
+<td> Vehicle_Number</td>
+{% endif %}
+
+</a></li>
+  {% endfor %}
+{% endif %}
+</ul>
+
+
+<div class="container">
+<div id="myUL"class="panel">
+<table id="tab" class="table table-bordered table-striped">
+ <thead class="w3-black"><th style="width:30%">Analyst</th><th>Public Safety #</th><th>Updated Date</th><th>Updated Fields:</th></thead>
+
+ {% if queryset %}
+  {% for instance in queryset %}
+
+   <tr><td>{{instance.user_id}}</td><td>{{instance.PS_case}}</td><td>{{instance.UpdatedTime}}</td>
+
+{% if instance.Date_of_Crash_OLD != instance.Date_of_Crash %}
+<td> Date of Crash </td>
+{% endif %}
+
+{% if instance.County_Code_OLD != instance.County_Code %}
+<td> County Code</td>
+{% endif %}
+
+{% if instance.Exit_Number_OLD != instance.Exit_Number %}
+<td> Exit Number</td>
+{% endif %}
+
+{% if instance.Ramp_ID_OLD != instance.Ramp_ID %}
+<td> Distance</td>
+{% endif %}
+
+{% if instance.Crash_Severity_OLD != instance.Crash_Severity %}
+<td> Crash Severity</td>
+{% endif %}
+
+{% if instance.Nearest_City_OLD != instance.Nearest_City %}
+<td> Nearest City</td>
+{% endif %}
+
+{% if instance.Distance_OLD != instance.Distance %}
+<td> Distance</td>
+{% endif %}
+
+{% if instance.Manner_Collision_OLD != instance.Manner_Collision %}
+<td> Manner of Collision</td>
+{% endif %}
+
+{% if instance.Main_Road_Name_OLD != instance.Main_Road_Name %}
+<td> Main Road Name</td>
+{% endif %}
+
+{% if instance.Road_Junction_Feature_OLD != instance.Road_Junction_Feature %}
+<td> Road Junction Feature</td>
+{% endif %}
+
+{% if instance.At_Intersection_With_OLD != instance.At_Intersection_With %}
+<td> At Interestion With</td>
+{% endif %}
+
+{% if instance.First_Harmful_Event_OLD != instance.First_Harmful_Event %}
+<td> First Harmful Event</td>
+{% endif %}
+
+{% if instance.Not_At_Intersection_Distance_OLD != instance.Not_At_Intersection_Distance %}
+<td> Not At Intersection Distance</td>
+{% endif %}
+
+{% if instance.Nearest_Intersection_OLD != instance.Nearest_Intersection %}
+<td> Nearest Intersection</td>
+{% endif %}
+
+{% if instance.Ref_Post_Distance_OLD != instance.Ref_Post_Distance %}
+<td> Ref Post Distance</td>
+{% endif %}
+
+{% if instance.Ref_Post_Direction_OLD != instance.Ref_Post_Direction %}
+<td> Ref Post Direction</td>
+{% endif %}
+
+{% if instance.Ref_Post_Description_OLD != instance.Ref_Post_Description %}
+<td> Ref Post Description</td>
+{% endif %}
+
+{% if instance.Work_Zone_Related_OLD != instance.Work_Zone_Related %}
+<td> Work Zone Related</td>
+{% endif %}
+
+{% if instance.Work_Zone_Worker_Present_OLD != instance.Work_Zone_Worker_Present %}
+<td> Work Zone Worker Present</td>
+{% endif %}
+
+{% if instance.Work_Zone_ID_OLD != instance.Work_Zone_ID %}
+<td> Work Zone ID</td>
+{% endif %}
+
+{% if instance.Work_Zone_Location_OLD != instance.Work_Zone_Location %}
+<td> Work Zone Location</td>
+{% endif %}
+
+{% if instance.Unconfirmed_Fatality_Report_OLD != instance.Unconfirmed_Fatality_Report %}
+<td> Unconfirmed Fatality Report</td>
+{% endif %}
+
+{% if instance.Light_Condition_OLD != instance.Light_Condition %}
+<td> Light Condition</td>
+{% endif %}
+
+{% if instance.Road_Surface_Condition_OLD != instance.Road_Surface_Condition %}
+<td> Road Surface Condition</td>
+{% endif %}
+
+{% if instance.Weather_Condition_OLD != instance.Weather_Condition %}
+<td> Weather Condition</td>
+{% endif %}
+</tr>
+  {% endfor %}
+{% endif %}
+
+</table>
+</div>
+</div>
+
+<div class="container">
+<div id="myUL" class="panel">
+<table id="tab1" class="table table-bordered table-striped">
+ <thead class="w3-black"><th style="width:30%">Analyst</th><th>Public Safety #</th><th>Updated Date</th><th>Updated Fields:</th></thead>
+
+  {% if queryset1 %}
+  {% for instance in queryset1 %}
+
+  <tr><td>  {{instance.user_id}}</td><td> {{instance.PS_case}}</td><td> {{instance.UpdatedTime}}</td>
+{% if instance.Make_OLD != instance.Make %}
+<td> Make</td>
+{% endif %}
+
+{% if instance.Vehicle_Maneuver_OLD != instance.Vehicle_Maneuver %}
+<td> Vehicle Maneuver</td>
+{% endif %}
+
+{% if instance.Vehicle_Number_OLD != instance.Vehicle_Number %}
+<td> Vehicle Number</td>
+{% endif %}
+
+{% if instance.Vin_Verified_OLD != instance.Vin_Verified %}
+<td> Vin Verified</td>
+{% endif %}
+
+{% if instance.License_Plate_Number_OLD != instance.License_Plate_Number %}
+<td> License Plate Number</td>
+{% endif %}
+
+{% if instance.Motor_Vehicle_Body_OLD != instance.Motor_Vehicle_Body %}
+<td> Motor Vehicle Body</td>
+{% endif %}
+
+{% if instance.Trailing_Units_OLD != instance.Trailing_Units %}
+<td> Trailing Units</td>
+{% endif %}
+
+{% if instance.Cargo_Body_Type_OLD != instance.Cargo_Body_Type %}
+<td> Cargo Body</td>
+{% endif %}
+
+{% if instance.Special_Function_Code_OLD != instance.Special_Function_Code %}
+<td> Special Function Code</td>
+{% endif %}
+
+{% if instance.First_Event_OLD != instance.First_Event %}
+<td> First Event</td>
+{% endif %}
+
+{% if instance.Second_Event_OLD != instance.Second_Event %}
+<td> Second Event</td>
+{% endif %}
+
+{% if instance.Third_Event_OLD != instance.Third_Event %}
+<td> Third Event</td>
+{% endif %}
+
+{% if instance.Fourth_Event_OLD != instance.Fourth_Event %}
+<td> Fourth Event</td>
+{% endif %}
+
+{% if instance.Roadway_Description_OLD != instance.Roadway_Description %}
+<td> Roadway Description</td>
+{% endif %}
+
+{% if instance.Disposition_Of_Vehicle_OLD != instance.Disposition_Of_Vehicle %}
+<td> Disposition of Vehicle</td>
+{% endif %}
+
+{% if instance.Towed_By_OLD != instance.Towed_By %}
+<td> Towed By</td>
+{% endif %}
+
+{% if instance.Carrier_Name_OLD != instance.Carrier_Name %}
+<td> Carrier Name</td>
+{% endif %}
+
+{% if instance.US_DOT_Number_OLD != instance.US_DOT_Number %}
+<td> US DOT #</td>
+{% endif %}
+
+{% if instance.US_DOT_Verified_OLD != instance.US_DOT_Verified %}
+<td> US DOT Verified</td>
+{% endif %}
+
+{% if instance.GCWR_GVWR_OLD != instance.GCWR_GVWR%}
+<td> GCWR GVWR</td>
+{% endif %}
+
+{% if instance.Carrier_Address_Street_OLD != instance.Carrier_Address_Street %}
+<td> Carrier Address Street</td>
+{% endif %}
+
+{% if instance.Carrier_Address_Street2_OLD != instance.Carrier_Address_Street2 %}
+<td> Carrier Address Street2</td>
+{% endif %}
+
+{% if instance.Carrier_Address_City_OLD != instance.Carrier_Address_City %}
+<td> Carrier Address City</td>
+{% endif %}
+
+{% if instance.Carrier_Address_State_OLD != instance.Carrier_Address_State %}
+<td> Carrier Address State</td>
+{% endif %}
+
+{% if instance.Carrier_Address_Zip_OLD != instance.Carrier_Address_Zip %}
+<td> Carrier Address Zip</td>
+{% endif %}
+
+{% if instance.Carrier_Address_County_OLD != instance.Carrier_Address_County %}
+<td> Carrier Address County</td>
+{% endif %}
+
+{% if instance.Carrier_Address_Phone_OLD != instance.Carrier_Address_Phone %}
+<td> Carrier Address Phone</td>
+{% endif %}
+
+{% if instance.Is_Driver_Carrier_OLD != instance.Is_Driver_Carrier %}
+<td> Is Driver Carrier</td>
+{% endif %}
+
+{% if instance.Interstate_OLD != instance.Interstate %}
+<td> Interstate</td>
+{% endif %}
+
+{% if instance.Cargo_Code_OLD != instance.Cargo_Code %}
+<td> Cargo Code</td>
+{% endif %}
+
+{% if instance.Hazmat_Released_OLD != instance.Hazmat_Released %}
+<td> Hazamat Released</td>
+{% endif %}
+
+{% if instance.Hazmat_Placard_Number_OLD != instance.Hazmat_Placard_Number %}
+<td> Hazmat Placard #</td>
+{% endif %}
+
+{% if instance.Is_Owner_Driver_OLD != instance.Is_Owner_Driver %}
+<td> Is Owner Driver</td>
+{% endif %}
+
+{% if instance.Owner_First_OLD != instance.Owner_First %}
+<td> Owner First</td>
+{% endif %}
+
+{% if instance.Owner_Middle_OLD != instance.Owner_Middle %}
+<td> Owner Middle</td>
+{% endif %}
+
+{% if instance.Owner_Last_OLD != instance.Owner_Last %}
+<td> Owner Last</td>
+{% endif %}
+
+{% if instance.Owner_Address_Street_OLD != instance.Owner_Address_Street %}
+<td> Owner Address Street</td>
+{% endif %}
+
+{% if instance.Owner_Address_Street2_OLD != instance.Owner_Address_Street2 %}
+<td> Owner Address Street2</td>
+{% endif %}
+
+{% if instance.Owner_Address_City_OLD != instance.Owner_Address_City %}
+<td> Owner Address City</td>
+{% endif %}
+
+{% if instance.Owner_Address_State_OLD != instance.Owner_Address_State %}
+<td> Owner Address State</td>
+{% endif %}
+
+{% if instance.Owner_Address_Zip_OLD != instance.Owner_Address_Zip %}
+<td> Owner Address Zip</td>
+{% endif %}
+
+{% if instance.Owner_Address_Phone_OLD != Owner.Carrier_Address_Phone %}
+<td> Owner Address Phone</td>
+{% endif %}
+
+{% if instance.Travel_Direction_OLD != instance.Travel_Direction %}
+<td> Travel Direction</td>
+{% endif %}
+
+{% if instance.Traffic_Control_Device_OLD != instance.Traffic_Control_Device %}
+<td> Traffic Control Device</td>
+{% endif %}
+
+{% if instance.Driver_Condition_OLD != instance.Driver_Condition %}
+<td> Driver Condition</td>
+{% endif %}
+</tr>
+
+  {% endfor %}
+{% endif %}
+</table>
+</div>
+</div>
+
+
+<div class="container">
+<div id="myUL"class="panel">
+<table id="tab2" class="table table-bordered table-striped">
+ <thead class="w3-black"><th style="width:30%">Analyst</th><th>Public Safety #</th><th>Updated Date</th><th>Updated Fields:</th></thead>
+
+  {% if querysets2 %}
+  {% for instance in queryset2 %}
+
+  <tr><td>  {{instance.user_id}}</td><td> {{instance.PS_case}}</td><td> {{instance.UpdatedTime}}</td>
+{% if instance.Name_Last_OLD != instance.Name_Last %}
+<td> Last Name</td>
+{% endif %}
+
+{% if instance.Name_First_OLD != instance.Name_First %}
+<td> First Name</td>
+{% endif %}
+
+{% if instance.Name_Middle_OLD != instance.Name_Middle %}
+<td> Middle Name</td>
+{% endif %}
+
+{% if instance.Sex_OLD != instance.Sex %}
+<td> Sex</td>
+{% endif %}
+
+{% if instance.Date_Of_Birth_OLD != instance.Date_Of_Birth %}
+<td> Date of Birth</td>
+{% endif %}
+
+{% if instance.Age_OLD != instance.Age %}
+<td> Age</td>
+{% endif %}
+
+{% if instance.Address_Street_OLD != instance.Address_Street %}
+<td> Address Street</td>
+{% endif %}
+
+{% if instance.Address_Street2_OLD != instance.Address_Street2 %}
+<td> Address Street (Continued)</td>
+{% endif %}
+
+{% if instance.Address_City_OLD != instance.Address_City %}
+<td> Address City</td>
+{% endif %}
+
+{% if instance.Address_State_OLD != instance.Address_State %}
+<td> Address State</td>
+{% endif %}
+
+{% if instance.Address_Zip_OLD != instance.Address_Zip %}
+<td> Address Zip</td>
+{% endif %}
+
+{% if instance.Address_County_OLD != instance.Address_County %}
+<td> Address County</td>
+{% endif %}
+
+{% if instance.Phone_OLD != instance.Phone %}
+<td> Phone #</td>
+{% endif %}
+
+{% if instance.Dl_Number_OLD != instance.Dl_Number %}
+<td> Driver License #</td>
+{% endif %}
+
+{% if instance.Dl_State_OLD != instance.Dl_State %}
+<td> Driver License State</td>
+{% endif %}
+
+{% if instance.Dl_Class != instance.Dl_Class_OLD %}
+<td> Driver License Class</td>
+{% endif %}
+
+{% if instance.CDL_Presented_At_Scene_OLD != instance.CDL_Presented_At_Scene %}
+<td> CDL Presented At Scene</td>
+{% endif %}
+
+{% if instance.Injury_Level_OLD != instance.Injury_Level %}
+<td> Injury Level</td>
+{% endif %}
+
+{% if instance.Charge_OLD != instance.Charge %}
+<td> Charge</td>
+{% endif %}
+
+{% if instance.Status_Code_OLD != instance.Status_Code %}
+<td> Status Code</td>
+{% endif %}
+
+{% if instance.Person_Type_OLD != instance.Person_Type %}
+<td> Person Type</td>
+{% endif %}
+
+{% if instance.Vehicle_Number_OLD != instance.Vehicle_Number %}
+<td> Vehicle_Number</td>
+{% endif %}
+
+</tr>
+  {% endfor %}
+{% endif %}
+</table>
+</div>
+</div>
+
+
+<script>
+function myFunction() {
+    var input, filter, ul, li, a, i;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("myUL");
+    li = ul.getElementsByTagName("li");
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+
+        }
+    }
+}
+  /* global $ */
+        $("#dl").click(function(){
+                $("#tab").table2csv('output', {appendTo: '#out'});
+                $("#tab").table2csv();
+        })    
+
+  /* global $ */
+        $("#d2").click(function(){
+                $("#tab1").table2csv('output', {appendTo: '#out'});
+                $("#tab1").table2csv();
+        })
+
+  /* global $ */
+        $("#d3").click(function(){
+                $("#tab2").table2csv('output', {appendTo: '#out'});
+                $("#tab2").table2csv();
+        })
+
+
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36251023-1']);
+  _gaq.push(['_setDomainName', 'jqueryscript.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+var acc = document.getElementsByClassName("accordion");
+
+</script>
+</body>
+</html>
+
+

@@ -7,13 +7,22 @@
   <!-- Load Leaflet from CDN-->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js"></script>
+  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css' />
+  <link rel="icon" href="../../favicon.ico">
+  <script src =  "http://cdi-utaps.test.utah.edu/static/admin/js/jquery-2.2.0.min.js"></script>
+  <script src="http://cdi-utaps.test.utah.edu/static/admin/js/ajax.js"></script>
 
   <!-- Load Esri Leaflet from CDN -->
   <script src="https://unpkg.com/esri-leaflet@2.0.8"></script>
-
+  <script src="https://unpkg.com/leaflet-easybutton@2.0.0/src/easy-button.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.2.4/dist/esri-leaflet-geocoder.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/1.6.0/math.js"></script>
+  <script src="https://unpkg.com/esri-leaflet-geocoder@2.2.4"></script>
+  <script src="https://cdn.rawgit.com/mayotunde/major/gh-pages/dist/leaflet-measure.js"></script>
+  <link rel="stylesheet" href="https://cdn.rawgit.com/mayotunde/major/gh-pages/dist/leaflet-measure.css" />
   <style>
     body { margin:0; padding:0; }
-    #map { position: absolute; top:0; bottom:0; right:0; left:0; }
+    #map { position: absolute; top:0; bottom:0; right:0; left:0;}
    .mydivicon{
     width: 12px
     height: 12px;
@@ -36,25 +45,201 @@
     box-shadow: 0 0px 0px;
   	}
         
+
+  #basemaps-wrapper {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 400;
+    background: white;
+    padding: 10px;
+  }
+  #basemaps {
+    margin-bottom: 5px;
+  }
+
+//  .leaflet-touch .leaflet-bar{
+//    width: 30px;
+//    height: 30px;
+//    line-height: 28px;
+//  }
+
+#Route_Value{
+
+       width: 45px;
+     }
+
+#Mp_Value{
+      
+        width: 55px;
+     }
+
+  .easy-button-button {
+    display: block;
+    z-index: 401;
+    position: absolute;
+    top: -75px;
+//    center: 4px;
+    left:calc(100vw - 400px) !important;
+
+
 }
+
   </style>
 </head>
 <body>
+ 
+
+{% if queryset %}
+  {% for instance in queryset %}
 
 <div id="map"></div>
 
+<div id="basemaps-wrapper" class="leaflet-bar">
+
+  <div class="tab-content">
+  <div id="Milepost" class="tab-pane fade in active">
+      <h3>Milepost</h3>
+      <form id="loc_route" name="loc_route"><label for="route_title" class="cortrol-label"> Route:</label> <input name="route_value" id="Route_Value" type="text" value="{{instance.route_number}}"/> Milepost: <input name="mp_value" id="Mp_Value" type="text" value="{{instance.milepoint}}"/></form>
+       <p id='di'> </p>
+      <h3>Geocode</h3>
+      <iframe style="height: 40%; border: none" src="http://cdi-utaps.test.utah.edu/gup/{{instance.id}}/edit"></iframe>
+      <a id='h'>Reload</a>
+      <h3>Base Map</h3>
+
+      <select name="basemaps" id="basemaps" onChange="changeBasemap(basemaps)">
+        <option value="Streets">Streets</option>
+        <option value="Topographic">Topographic</option>
+        <option value="NationalGeographic">National Geographic</option>
+        <option value="Gray">Gray</option>
+        <option value="DarkGray">Dark Gray</option>
+        <option value="Imagery">Imagery</option>
+        <option value="ShadedRelief">Shaded Relief</option>
+      </select>
+
+
+    </div>
+
+  </div>
+</div>
 <script>
-{% if queryset %}
-  {% for instance in queryset %}
+
+
   var lat = {{instance.latitude}};
   var long = {{instance.longitude}};
-
+  var MP2 = 320;
+  var route1 = '0015';
+ 
   var map = L.map('map').setView([lat, long], 20);
   var marker = L.marker([lat, long]).addTo(map);
   var icon = new L.divIcon({className: 'mydivicon'});
 
 
-  L.esri.basemapLayer('Streets').addTo(map);
+  var measureControl = new L.Control.Measure({ position: 'bottomleft', primaryLengthUnit: 'miles', secondaryLengthUnit: 'feet', activeColor: '#316', completedColor:'#316'}).addTo(map);
+
+  var searchControl = L.esri.Geocoding.geosearch().addTo(map);
+
+    // create an empty layer group to store the results and add it to the map
+  var results = L.layerGroup().addTo(map);
+
+    // listen for the results event and add every result to the map
+  searchControl.on("results", function(data) {
+    results.clearLayers();
+    for (var i = data.results.length - 1; i >= 0; i--) {
+      results.addLayer(L.marker(data.results[i].latlng));
+    }
+  });
+
+
+
+  var layer = L.esri.basemapLayer('Streets').addTo(map);
+
+  var layerLabels;
+
+  function setBasemap(basemap) {
+    if (layer) {
+      map.removeLayer(layer);
+    }
+
+    layer = L.esri.basemapLayer(basemap);
+
+    map.addLayer(layer);
+
+    if (layerLabels) {
+      map.removeLayer(layerLabels);
+    }
+
+    if (basemap === 'ShadedRelief'
+     || basemap === 'Gray'
+     || basemap === 'DarkGray'
+     || basemap === 'Imagery'
+     || basemap === 'Terrain'
+   ) {
+      layerLabels = L.esri.basemapLayer(basemap + 'Labels');
+      map.addLayer(layerLabels);
+    }
+  }
+
+  function changeBasemap(basemaps){
+    var basemap = basemaps.value;
+    setBasemap(basemap);
+  }
+
+
+function UTMtoLatLong (Easting,Northing) {
+    //Input
+		northernHemisphere=1 // type 1 for northern hemisphere, 0 for southern hemisphere
+		zone=12
+		easting=Easting
+		northing=Northing
+//
+
+		if (northernHemisphere=0) {
+			northing = 10000000 - northing
+		}
+		a = 6378137
+		e = 0.081819191
+		e1sq = 0.006739497
+		k0 = 0.9996
+		arc = northing / k0
+		mu = arc / (a * (1 - math.pow(e, 2) / 4.0 - 3 * math.pow(e, 4) / 64.0 - 5 * math.pow(e, 6) / 256.0))
+		ei = (1 - math.pow((1 - e * e), (1 / 2.0))) / (1 + math.pow((1 - e * e), (1 / 2.0)))
+		ca = 3 * ei / 2 - 27 * math.pow(ei, 3) / 32.0
+		cb = 21 * math.pow(ei, 2) / 16 - 55 * math.pow(ei, 4) / 32
+		cc = 151 * math.pow(ei, 3) / 96
+		cd = 1097 * math.pow(ei, 4) / 512
+		phi1 = mu + ca * math.sin(2 * mu) + cb * math.sin(4 * mu) + cc * math.sin(6 * mu) + cd * math.sin(8 * mu)
+		n0 = a / math.pow((1 - math.pow((e * math.sin(phi1)), 2)), (1 / 2.0))
+		r0 = a * (1 - e * e) / math.pow((1 - math.pow((e * math.sin(phi1)), 2)), (3 / 2.0))
+		fact1 = n0 * math.tan(phi1) / r0
+		_a1 = 500000 - easting
+		dd0 = _a1 / (n0 * k0)
+		fact2 = dd0 * dd0 / 2
+		t0 = math.pow(math.tan(phi1), 2)
+		Q0 = e1sq * math.pow(math.cos(phi1), 2)
+		fact3 = (5 + 3 * t0 + 10 * Q0 - 4 * Q0 * Q0 - 9 * e1sq) * math.pow(dd0, 4) / 24
+		fact4 = (61 + 90 * t0 + 298 * Q0 + 45 * t0 * t0 - 252 * e1sq - 3 * Q0 * Q0) * math.pow(dd0, 6) / 720
+		lof1 = _a1 / (n0 * k0)
+		lof2 = (1 + 2 * t0 + Q0) * math.pow(dd0, 3) / 6.0
+		lof3 = (5 - 2 * Q0 + 28 * t0 - 3 * math.pow(Q0, 2) + 8 * e1sq + 24 * math.pow(t0, 2)) * math.pow(dd0, 5) / 120
+		_a2 = (lof1 - lof2 + lof3) / math.cos(phi1)
+		_a3 = _a2 * 180 / math.pi
+		zoneCM = 6 * zone - 183.0
+		latitude = 180 * (phi1 - fact1 * (fact2 + fact3 + fact4)) / math.pi
+		if (northernHemisphere=0) {
+			latitude = -latitude
+		}
+		longitude = zoneCM - _a3
+		//Output - rounded to the first 7 decimal places      
+		lat1 = latitude.toFixed(7)
+		long1 = longitude.toFixed(7)
+		//
+
+  	return [lat1, long1]
+  } 
+
+
+
   var milepost = L.esri.featureLayer({
   url: "https://utaps1.utaps-data.utah.edu/arcgis/rest/services/Leaflet/Milepost/MapServer/2",
     useCors: false,
@@ -72,54 +257,143 @@
 
   }).addTo(map);;
 
+ var ss = L.esri.featureLayer({
+  url: "https://utaps1.utaps-data.utah.edu/arcgis/rest/services/Leaflet/UTMRD/MapServer/0",
+    useCors: false,
+   }).addTo(map);
+
+
+ 
  var stops = L.esri.featureLayer({
-  url: "https://utaps1.utaps-data.utah.edu/arcgis/rest/services/feature/CrashMilepoint/FeatureServer/2",
+  url: "https://utaps1.utaps-data.utah.edu/arcgis/rest/services/Leaflet/UTRD/MapServer/0",
     useCors: false,
     style:function(feature)
     {
-      return {color: '#000000'};
+      return {color: '#72605a'};
     }
   }).addTo(map);
 
   var previousIds = [];
-
+  var popup;
+  var d_miles;
 
   stops.on('mouseover', function(e){
-    var popup = L.popup().setLatLng(e.latlng)
-    .setContent("Route: "+(e.layer.feature.properties.DOT_RTNAME.toString())+"&nbsp;MP:&nbsp"+(e.layer.feature.properties.DOT_T_MILE-((e.latlng.lat-lat)+(e.latlng.lng-long))).toString()).openOn(map);
-    stops.query().nearby(e.latlng, 2).ids(function(error, ids){
-      for (var j = 0; j < previousIds.length; j++) {
-        stops.resetStyle(previousIds[j]);
-    
-      }
+  lat_from = UTMtoLatLong(e.layer.feature.properties.Start_X, e.layer.feature.properties.Start_Y)[0];
+  long_from = UTMtoLatLong(e.layer.feature.properties.Start_X, e.layer.feature.properties.Start_Y)[1];
+  R = 6371e3; // metres
+	p1 = lat_from*(math.pi/180);
+	p2 = e.latlng.lat*(math.pi/180);
+	deltaLat = (e.latlng.lat-lat_from)*(math.pi/180);
+	deltaLong = (e.latlng.lng-long_from)*(math.pi/180);
+	a = math.sin(deltaLat/2) * math.sin(deltaLat/2) + math.cos(p1) * math.cos(p2) * math.sin(deltaLong/2) * math.sin(deltaLong/2);
+	c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a));
+	d = R * c;
+  d_miles = d / 1600;
 
-      previousIds = ids;
-      for (var i = 0; i < ids.length; i++) {
-        stops.setFeatureStyle(ids[i], {
-          color: '#BA454E',
-          weight: 2,
-          opacity: 0.85,
-          fillOpacity: 0.5
-        });
-      }
+  if (e.layer.feature.properties.DOT_F_MILE>0){
+  if (e.layer.feature.properties.DOT_F_MILE < e.layer.feature.properties.DOT_T_MILE) {
+       popup = L.popup().setLatLng(e.latlng)
+       .setContent("Route: "+(e.layer.feature.properties.DOT_RTNAME.toString())+"&nbsp;MP:&nbsp"+((e.layer.feature.properties.DOT_F_MILE+(d_miles)).toFixed(3)).toString()).openOn(map);
+    } else {
+     popup = L.popup().setLatLng(e.latlng)
+     .setContent("Route: "+(e.layer.feature.properties.DOT_RTNAME.toString())+"&nbsp;MP:&nbsp"+((e.layer.feature.properties.DOT_F_MILE-(d_miles)).toFixed(3)).toString()).openOn(map);
+    }
+  }
+  else {
+    popup = L.popup().setLatLng(e.latlng)
+       .setContent("Route: "+(e.layer.feature.properties.DOT_RTNAME.toString())+"&nbsp;MP:&nbsp"+("N/A").toString()).openOn(map);
+  }
+  
+
+    stops.query().nearby(e.latlng, 1).ids(function(error, ids){
+        for (var j = 0; j < previousIds.length; j++) {
+                stops.resetStyle(previousIds[j]);
+
+        }
+
+        previousIds = ids;
+        for (var i = 0; i < ids.length; i++) {
+           stops.setFeatureStyle(ids[i], {
+              color: '#BA454E',
+              weight: 4,
+              opacity: 0.85,
+              fillOpacity: 0.5
+           });
+        }
     });
+
+  });
+   
+  stops.on('mouseout', function(e){
+  	map.closePopup(popup);
+    stops.query().nearby(e.latlng, 1).ids(function(error, ids){
+       for (var j = 0; j < previousIds.length; j++) {
+        stops.resetStyle(previousIds[j]);
+       }
+    });    
   });
 
-
 stops.on('click', function(e) {
-x= e.latlng.lat.toString();  y = e.latlng.lng.toString();
-var popupTemplate = "<form class='form-inline' method='post' action=''>{% csrf_token %}<div id='div_id_PS_case' class='form-group'><label for='id_PS_case' class='control-label  requiredField'>PS Case ID<span class='asteriskField'>*</span></label><div class='controls '><input class='numberinput form-control' id='id_PS_case' max='9223372036854775807' min='-9223372036854775808' name='PS_Case_ID' type='number' value={{instance.PS_Case_ID}} /></div></div><div id='div_id_Route' class='form-group'><label for='id_Route' class='control-label'>Route</label><div class='controls '><input class='textinput textInput form-control' id='id_Route' maxlength='4' name='route_number' type='text' value='{DOT_RTNAME}' /></div></div><div id='div_id_County_Code' class='form-group'><label for='id_County_Code' class='control-label '>County Code</label><div class='controls '><input class='textinput textInput form-control' id='id_County_Code' maxlength='3' name='county_ID' type='text' value='{COFIPS}' /></div></div><div id='div_id_Milepoint' class='form-group'><label for='id_Milepoint' class='control-label '>Milepoint</label><div class='controls '><input class='textinput textInput form-control' id='id_Milepoint' maxlength='8' name='milepoint' type='text'{% if DOT_T_MILE > 0 %} value='{DOT_T_MILE}-((e.latlng.lat-lat)+(e.latlng.lng-long)).toFixed(3)'{% else %} value='{DOT_T_MILE}'{% endif %}/></div></div><div id='div_id_City' class='form-group'><label for='id_City' class='control-label '>City</label><div class='controls'><input class='textinput textInput form-control' id='id_City' maxlength='20' name='city' type='text' value='{USPS_PLACE}' /></div></div><div id='div_id_Main_Road_Name' class='form-group'><label for='id_Main_Road_Name' class='control-label '>Main Road Name</label><div class='controls '><input class='textinput textInput form-control' id='id_Main_Road_Name' maxlength='30' name='address' type='text' value='{FULLNAME}' /></div></div><div id='div_id_Zip' class='form-group'><label for='id_Zip' class='control-label '>Zip</label><div class='controls '><input class='textinput textInput form-control' id='id_Zip' maxlength='4' name='zip_code' type='text' value='{ZIPLEFT}' /></div></div><div id='div_id_Lat' class='form-group'><label for='id_Lat' class='control-label '>Latitude</label><div class='controls '><input class='textinput textInput form-control' id='id_Lat' maxlength='22' name='latitude' type='text' value="+x+"/></div></div><div id='div_id_Long' class='form-group'><label for='id_Long' class='control-label '>Longitude</label><div class='controls '><input class='textinput textInput form-control' id='id_Long' maxlength='22' name='longitude' type='text' value="+y+"/></div></div><br /><input class='btn btn-default' type='submit' value ='Submit' /></form>";
+x= e.latlng.lat.toString();  y = e.latlng.lng.toString()
+var ty='NA';
+
+if ( e.layer.feature.properties.DOT_F_MILE > 0){
+   if (e.layer.feature.properties.DOT_F_MILE < e.layer.feature.properties.DOT_T_MILE){
+      ty = (e.layer.feature.properties.DOT_F_MILE+d_miles).toFixed(3);
+   } else {
+      ty = (e.layer.feature.properties.DOT_F_MILE-d_miles).toFixed(3);}
+ }
+
+var popupTemplate = "<form class='form-inline' method='post' action=''>{% csrf_token %}<div id='div_id_PS_case' class='form-group'><label for='id_PS_case' class='control-label  requiredField'>PS Case ID<span class='asteriskField'>*</span></label><div class='controls '><input class='numberinput form-control' id='id_PS_case' max='9223372036854775807' min='-9223372036854775808' name='PS_Case_ID' type='number' value={{instance.PS_Case_ID}} /></div></div><div id='div_id_Route' class='form-group'><label for='id_Route' class='control-label'>Route</label><div class='controls '><input class='textinput textInput form-control' id='id_Route' maxlength='4' name='route_number' type='text' value='{DOT_RTNAME}' /></div></div><div id='div_id_County_Code' class='form-group'><label for='id_County_Code' class='control-label '>County Code</label><div class='controls '><input class='textinput textInput form-control' id='id_County_Code' maxlength='3' name='county_ID' type='text' value='{COFIPS}' /></div></div><div id='div_id_Milepoint' class='form-group'><label for='id_Milepoint' class='control-label '>Milepoint</label><div class='controls '><input class='textinput textInput form-control' id='id_Milepoint' maxlength='8' name='milepoint' type='text' value="+ty+" </div></div><div id='div_id_City' class='form-group'><label for='id_City' class='control-label '>City</label><div class='controls'><input class='textinput textInput form-control' id='id_City' maxlength='20' name='city' type='text' value='{USPS_PLACE}' /></div></div><div id='div_id_Main_Road_Name' class='form-group'><label for='id_Main_Road_Name' class='control-label '>Main Road Name</label><div class='controls '><input class='textinput textInput form-control' id='id_Main_Road_Name' maxlength='30' name='address' type='text' value='{FULLNAME}' /></div></div><div id='div_id_Zip' class='form-group'><label for='id_Zip' class='control-label '>Zip</label><div class='controls '><input class='textinput textInput form-control' id='id_Zip' maxlength='4' name='zip_code' type='text' value='{ZIPLEFT}' /></div></div><div id='div_id_Lat' class='form-group'><label for='id_Lat' class='control-label '>Latitude</label><div class='controls '><input class='textinput textInput form-control' id='id_Lat' maxlength='22' name='latitude' type='text' value="+x+"/></div></div><div id='div_id_Long' class='form-group'><label for='id_Long' class='control-label '>Longitude</label><div class='controls '><input class='textinput textInput form-control' id='id_Long' maxlength='22' name='longitude' type='text' value="+y+"/></div></div><br /><input class='btn btn-default' type='submit' value ='Submit' /></form>";
 stops.bindPopup(function(e){
        return L.Util.template(popupTemplate, e.feature.properties)
   });
 });  
 
 
+  
+function M() {
+    myWindow = window.open("http://cdi-utaps.test.utah.edu/gup/"+{{instance.id}}+"/edit","_blank","resizable=1, scrollbars=1, fullscreen=0, height=auto, width=auto, screenX=' + window.leftScreenBoundry() + ' , left=' + window.leftScreenBoundry() + ', toolbar=0, menubar=0, status=1");
+}
+
+function Make() {
+     document.getElementById("did").innerHTML='<iframe width="100%" src="http://cdi-utaps.test.utah.edu/gup/{{instance.id}}/edit"></iframe>';   
+   
+}
 
 
-  </script>
+var btn1 = L.easyButton('fa-road', function(btn, map, e){
+      milepost.query().where("MP="+document.loc_route.Mp_Value.value+"AND RT_NAME="+document.loc_route.Route_Value.value).bounds(function(error, latLngBounds, response){
+          
+      if(error){
+		        alert("Query returns empty set");
+      } else{
+			map.setView(latLngBounds.getCenter(),17);
+      }
+			});
+  }).addTo(map);
+
+
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<script>
+
+
+$(document).ready(function(){
+    $("button").click(function(){
+        $("p").toggle();
+    });
+    $("#h").mouseleave(function(){
+         location.reload();
+});
+});
+
+</script>
+
       {% endfor %}
   {% endif %}
 </body>
 </html>
+
 

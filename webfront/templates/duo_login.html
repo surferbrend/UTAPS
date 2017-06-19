@@ -1,0 +1,54 @@
+<html>
+{% load staticfiles %}
+{% include 'head_css.html' %}
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="nav navbar-brand navbar-right" href="{% url 'auth_logout' %}">Logout</a>
+    </div>
+    <!-- <div id="navbar" class="navbar-collapse collapse">  -->
+    </div><!--/.nav-collapse -->
+  </div><!--/.container-fluid -->
+</nav>
+
+
+
+
+
+
+{% block head %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="refresh" content="90; URL='/accounts/logout'" />
+<link rel="stylesheet" type="text/css" href="{{ duo_css_src }}">
+{% endblock %}
+
+{% block content %}
+
+<p>{{ message }}</p>
+
+<form method="POST" id="duo_form">
+{% csrf_token %}
+{% if next %}
+<input type="hidden" name="next" value="{{ next }}"/>
+{% endif %}
+</form>
+
+<script src="{{ duo_js_src }}"></script>
+<iframe id="duo_iframe"
+        frameborder="0"
+        data-host="{{ duo_host }}"
+        data-sig-request="{{ sig_request }}"
+        data-post-action="{{ post_action }}"
+        >
+</iframe>
+
+{% endblock %}
+</html>

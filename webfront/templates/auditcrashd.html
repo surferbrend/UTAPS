@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+{% include 'head_css.html' %}
+{% include 'navbar.html' %}
+  <title>Audit Table {{queryset.PS_case}}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+* {
+    box-sizing: border-box;
+}
+
+.columns {
+    float: left;
+    width: 33.3%;
+    padding: 8px;
+}
+
+@media only screen and (max-width: 600px) {
+    .columns {
+        width: 100%;
+    }
+}
+
+div.panel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.6s ease-in-out;
+    opacity: 0;
+}
+
+div.panel.show {
+    opacity: 1;
+    max-height: 500px;
+}
+
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 12px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myUL {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#myUL li a {
+  border: 1px solid #ddd;
+  margin-top: -1px; /* Prevent double borders */
+  background-color: #f6f6f6;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
+  display: block
+}
+
+#myUL li a.header {
+  background-color: #e2e2e2;
+  cursor: default;
+}
+
+#myUL li a:hover:not(.header) {
+  background-color: #eee;
+
+
+table, td, th {
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 15px;
+}
+
+</style>
+
+
+<body>
+
+
+<div class="col-sm-8">
+
+      <div class="well">
+        <h4>Audit Crash Records</h4>
+        <iframe src="/auditframe/" height="1000" width="900"></iframe>
+
+      </div>
+
+</div>
+
+    
+<div class="columns">
+      <div class="well">
+
+  <h1>Audit Crash Record {{queryset.PS_case}}</h1>
+  
+
+<table class="table table-striped"><tr><h3><p>Public Safety Case #<p></h3></tr><tr><p><strong>{{queryset.PS_case}}</strong></p></tr><tr><p>Old Analyst:</p></tr><tr><p><strong>{{queryset.user_id_OLD}}</strong></p></tr>
+<tr>Analyst:</tr><tr><p>
+<strong>{{queryset.user_id}}</strong></p></tr>
+<tr><p>Updated Time</p></tr>
+<tr><p><strong>{{queryset.UpdatedTime}} </strong></p></tr> 
+<tr><p>Old Date of Crash:</p></tr>
+<tr><p><strong>{{queryset.Date_of_Crash_OLD}}</strong></p></tr>
+
+{% if queryset.Date_of_Crash_OLD != queryset.Date_of_Crash %}
+<tr><p> Date of Crash Update:</p></tr>
+<tr><p><strong>{{queryset.Date_of_Crash}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.County_Code_OLD != queryset.County_Code %}
+<tr><p>Old County Code</p></tr>
+<tr><p><strong>{{queryset.County_Code_OLD}}</strong></p></tr>
+<tr><p>County Code </p></tr>
+<tr><p><strong>{{queryset.County_Code}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Exit_Number_OLD != queryset.Exit_Number %}
+<tr><p>Old Exit Number</p></tr>
+<tr><p><strong>{{queryset.Exit_Number_OLD}}</strong></p></tr>
+<tr><p>Exit Number</p></tr>
+<tr><p><strong>{{queryset.Exit_Number}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Ramp_ID_OLD != queryset.Ramp_ID %}
+<tr><p>Old Ramp ID </tr></p>
+<tr><p><strong>{{queryset.Ramp_ID_OLD}}</strong></p></tr>
+<tr><p>Ramp ID </tr></p>
+<tr><p><strong>{{queryset.Ramp_ID}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Crash_Severity_OLD != queryset.Crash_Severity %}
+<tr><p>Old Crash Severity</tr></p>
+<tr><p><strong>{{queryset.Crash_Severity_OLD}}</strong></p></tr>
+<tr><p>Crash Severity</tr></p>
+<tr><p><strong>{{queryset.Crash_Severity}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Nearest_City_OLD != queryset.Nearest_City %}
+<tr><p>Old Nearest City</tr></p>
+<tr><p><strong>{{queryset.Nearest_City_OLD}}</strong></p></tr>
+<tr><p>Nearest City</tr></p>
+<tr><p><strong>{{queryset.Nearest_City}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Distance_OLD != queryset.Distance %}
+<tr><p>Old Distance</tr></p>
+<tr><p><strong>{{queryset.Distance_OLD}}</strong></p></tr>
+<tr><p>Distance</tr></p>
+<tr><p><strong>{{queryset.Distance}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Manner_Collision_OLD != queryset.Manner_Collision %}
+<tr><p>Old Manner of Collision</tr></p>
+<tr><p><strong>{{queryset.Manner_Collision_OLD}}</strong></p></tr>
+<tr><p>Old Manner of Collision</tr></p>
+<tr><p><strong>{{queryset.Manner_Collision_OLD}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Main_Road_Name_OLD != queryset.Main_Road_Name %}
+<tr><p>Old Main Road Name</tr></p>
+<tr><p><strong>{{queryset.Main_Road_Name_OLD}}</strong></p></tr>
+<tr><p>Main Road Name</tr></p>
+<tr><p><strong>{{queryset.Main_Road_Name}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Road_Junction_Feature_OLD != queryset.Road_Junction_Feature %}
+<tr><p>Old Road Junction Feature</tr></p>
+<tr><p><strong>{{queryset.Road_Junction_Feature_OLD}}</strong></p></tr>
+<tr><p>Road Junction Feature</tr></p>
+<tr><p><strong>{{queryset.Road_Junction_Feature}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.At_Intersection_With_OLD != queryset.At_Intersection_With %}
+<tr><p>Old At Interestion With</tr></p>
+<tr><p><strong>{{queryset.At_Intersection_With_OLD}}</strong></p></tr>
+<tr><p>At Interestion With</tr></p>
+<tr><p><strong>{{queryset.At_Intersection_With}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.First_Harmful_Event_OLD != queryset.First_Harmful_Event %}
+<tr><p>Old First Harmful Event</tr></p>
+<tr><p><strong>{{queryset.First_Harmful_Event_OLD}}</strong></p></tr>
+<tr><p>First Harmful Event</tr></p>
+<tr><p><strong>{{queryset.First_Harmful_Event}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Not_At_Intersection_Distance_OLD != queryset.Not_At_Intersection_Distance %}
+<tr><p>Old Not At Intersection Distance</tr></p>
+<tr><p><strong>{{queryset.Not_At_Intersection_Distance_OLD}}</strong></p></tr>
+<tr><p>Not At Intersection Distance</tr></p>
+<tr><p><strong>{{queryset.Not_At_Intersection_Distance}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Nearest_Intersection_OLD != queryset.Nearest_Intersection %}
+<tr><p>Old Nearest Intersection</tr></p>
+<tr><p><strong>{{queryset.Nearest_Intersection_OLD}}</strong></p></tr>
+<tr><p>Nearest Intersection</tr></p>
+<tr><p><strong>{{queryset.Nearest_Intersection}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Ref_Post_Distance_OLD != queryset.Ref_Post_Distance %}
+<tr><p>Old Ref Post Distance</tr></p>
+<tr><p><strong>{{queryset.Ref_Post_Distance_OLD}}</strong></p></tr>
+<tr><p>Ref Post Distance</tr></p>
+<tr><p><strong>{{queryset.Ref_Post_Distance}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Ref_Post_Direction_OLD != queryset.Ref_Post_Direction %}
+<tr><p>Old Ref Post Direction</tr></p>
+<tr><p><strong>{{queryset.Ref_Post_Direction_OLD}}</strong></p></tr>
+<tr><p>Ref Post Direction</tr></p>
+<tr><p><strong>{{queryset.Ref_Post_Direction}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Ref_Post_Description_OLD != queryset.Ref_Post_Description %}
+<tr><p>Old Ref Post Description</tr></p>
+<tr><p><strong>{{queryset.Ref_Post_Description_OLD}}</strong></p></tr>
+<tr><p>Ref Post Description</tr></p>
+<tr><p><strong>{{queryset.Ref_Post_Description}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Work_Zone_Related_OLD != queryset.Work_Zone_Related %}
+<tr><p>Old Work Zone Related</tr></p>
+<tr><p><strong>{{queryset.Work_Zone_Related_OLD}}</strong></p></tr>
+<tr><p>Work Zone Related</tr></p>
+<tr><p><strong>{{queryset.Work_Zone_Related}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Work_Zone_Worker_Present_OLD != queryset.Work_Zone_Worker_Present %}
+<tr><p>Old Work Zone Worker Present</tr></p>
+<tr><p><strong>{{queryset.Work_Zone_Worker_Present_OLD}}</strong></p></tr>
+<tr><p>Work Zone Worker Present</tr></p>
+<tr><p><strong>{{queryset.Work_Zone_Worker_Present}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Work_Zone_ID_OLD != queryset.Work_Zone_ID %}
+<tr><p>Old Work Zone ID</tr></p>
+<tr><p><strong>{{queryset.Work_Zone_ID_OLD}}</strong></p></tr>
+<tr><p>Work Zone ID</tr></p>
+<tr><p><strong>{{queryset.Work_Zone_ID}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Work_Zone_Location_OLD != queryset.Work_Zone_Location %}
+<tr><p>Old Work Zone Location</tr></p>
+<tr><p><strong>{{queryset.Work_Zone_Location_OLD}}</strong></p></tr>
+<tr><p>Work Zone Location</tr></p>
+<tr><p><strong>{{queryset.Work_Zone_Location}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Unconfirmed_Fatality_Report_OLD != queryset.Unconfirmed_Fatality_Report %}
+<tr><p>Old Unconfirmed Fatality Report</tr></p>
+<tr><p><strong>{{queryset.Unconfirmed_Fatality_Report_OLD}}</strong></p></tr>
+<tr><p>Unconfirmed Fatality Report</tr></p>
+<tr><p><strong>{{queryset.Unconfirmed_Fatality_Report}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Light_Condition_OLD != queryset.Light_Condition %}
+<tr><p>Old Light Condition</tr></p>
+<tr><p><strong>{{queryset.Light_Condition_OLD}}</strong></p></tr>
+<tr><p>Light Condition</tr></p>
+<tr><p><strong>{{queryset.Light_Condition}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Road_Surface_Condition_OLD != queryset.Road_Surface_Condition %}
+<tr><p>Old Road Surface Condition</tr></p>
+<tr><p><strong>{{queryset.Road_Surface_Condition_OLD}}</strong></p></tr>
+<tr><p>Road Surface Condition</tr></p>
+<tr><p><strong>{{queryset.Road_Surface_Condition}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Weather_Condition_OLD != queryset.Weather_Condition %}
+<tr><p>Old Weather Condition</tr></p>
+<tr><p><strong>{{queryset.Weather_Condition_OLD}}</strong></p></tr>
+<tr><p>Weather Condition</tr></p>
+<tr><p><strong>{{queryset.Weather_Condition}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Narrative_OLD != queryset.Narrative %}
+<tr><p>Old Narrative</tr></p>
+<tr><p><strong>{{queryset.Narrative_OLD}}</strong></p></tr>
+<tr><p>Narrative</tr></p>
+<tr><p><strong>{{queryset.Narrative}}</strong></p></tr>
+{% endif %}
+
+</table>
+</div>
+</div>
+ 
+   
+</body>
+</html>
+

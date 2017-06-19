@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html>
+
+{% load staticfiles %}
+{% include 'head_css.html' %}
+{% include 'navbar.html' %}
+  <title>Reconcile Table {{queryset.PS_case}}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+* {
+    box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+
+iframe {
+    display: block;       /* iframes are inline by default */
+    background: #000;
+    border: none;         /* Reset default border */
+    height: 100vh;        /* Viewport-relative units */
+    width: 25vw;
+}
+
+.columns {
+    float: left;
+    width: 33.3%;
+    padding: 8px;
+}
+
+@media only screen and (max-width: 600px) {
+    .columns {
+        width: 100%;
+    }
+}
+
+div.panel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.6s ease-in-out;
+    opacity: 0;
+}
+
+div.panel.show {
+    opacity: 1;
+    max-height: 500px;
+}
+
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 12px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myUL {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#myUL li a {
+  border: 1px solid #ddd;
+  margin-top: -1px; /* Prevent double borders */
+  background-color: #f6f6f6;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
+  display: block
+}
+
+#myUL li a.header {
+  background-color: #e2e2e2;
+  cursor: default;
+}
+
+#myUL li a:hover:not(.header) {
+  background-color: #eee;
+
+
+table, td, th {
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 15px;
+}
+
+</style>
+
+
+<body>
+
+<div class="row">
+<div class="col-md-6">
+<div class="well">
+<div class="container">
+       
+<div class="container">
+
+  <h2>Vehicle Records</h2>
+  <ul class="nav nav-pills">
+    <li class="active"><a data-toggle="pill" href="#home">Reconcile</a></li>
+  {% if queryset1 %}
+    {% for instance in queryset1 %}
+          {% if instance.PS_case == queryset.PS_case %}
+    <li><a data-toggle="pill" href="#{{instance.Vehicle_Number}}">Vehicle {{instance.Vehicle_Number}}</a></li>
+          {% endif %}
+    {% endfor %}
+
+
+  </ul>
+
+  <div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+<br />
+<p> Review the conflict record, then click on each vehicle tab and submit changes before proceeding with the reconcile</p>
+<br />
+<br />
+<div class="container">
+
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Reconcile Conflict</button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Finish Editing</h4>
+
+        </div>
+
+<div class="has-warning"> To confirm changes please check the box: <input type="checkbox" id="myCheck">
+<g></g>
+
+<p class="bg-danger"id="demo"></p>
+</div>
+
+        <div class="modal-footer">
+        <button onclick="myFunction()" class="btn btn-danger" >Make Edit</button>
+
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+      
+    </div>
+
+    {% for instance in queryset1 %}
+          {% if instance.PS_case == queryset.PS_case %}
+    <div id={{instance.Vehicle_Number}} class="tab-pane fade">
+      <h3>Vehicle {{instance.Vehicle_Number}}</h3>
+<iframe width="100%" src="{% url 'reconcile_vehicle' pk=instance.pk %}" alt=data frameborder="0" allowfullscreen></iframe>
+    </div>
+          {% endif %}
+   {% endfor %}
+  {% endif %}
+
+  </div>
+</div>
+</div>
+</div>
+
+</div>    
+
+<div class="col-md-6">
+      <div class="well">
+
+  <h1>Conflict Vehicle Record </h1>
+<table class="table table-striped"><tr><h3><p>Public Safety Case #<p></h3></tr><tr><p><strong>{{queryset.PS_case}}</strong></p></tr>
+
+{% if queryset1 %}
+  {% for instance in queryset1 %}
+
+   {% if instance.Vehicle_Number != queryset.Vehicle_Number %}
+<tr><p class="text-danger">Vehicle Number</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.Vehicle_Number}}</strong></p></tr>
+   {% else %}
+<tr><p>Vehicle Number</p></tr>
+<tr><p><strong>{{queryset.Vehicle_Number}}</strong></p></tr>
+{% endif %}
+
+   {% if instance.Vin_Verified != queryset.Vin_Verified %}
+<tr><p class="text-danger">Vin Verified</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.Vin_Verified}} </strong></p></tr>
+   {% else %}
+<tr><p>Vin Verified</p></tr>
+<tr><p><strong>{{queryset.Vin_Verified}} </strong></p></tr>
+{% endif %}
+
+   {% if instance.License_Plate_Number != queryset.License_Plate_Number %}
+<tr><p class="text-danger">License Plate Number</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.License_Plate_Number}}</strong></p></tr>
+   {% else %}
+<tr><p>License Plate Number</p></tr>
+<tr><p><strong>{{queryset.License_Plate_Number}}</strong></p></tr>
+{% endif %}
+
+   {% if instance.License_Plate_State != queryset.License_Plate_State %}
+<tr><p class="text-danger">License Plate State</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.License_Plate_State}}</strong></p></tr>
+   {% else %}
+<tr><p>License Plate State</p></tr>
+<tr><p><strong>{{queryset.License_Plate_State}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Motor_Vehicle_Body_Type != queryset.Motor_Vehicle_Body_Type %}
+<tr><p class="text-danger">Motor Vehicle Body Type</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.Motor_Vehicle_Body_Type}}</strong></p></tr>
+   {% else %}
+<tr><p>Motor Vehicle Body Type</p></tr>
+<tr><p><strong>{{queryset.Motor_Vehicle_Body_Type}}</strong></p></tr>
+{% endif %}
+
+   {% if instance.Trailing_Units != queryset.Trailing_Units %}
+<tr><p class="text-danger">Trailing Units</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.Trailing_Units}}</strong></p></tr>
+   {% else %}
+<tr><p>Trailing_Units</p></tr>
+<tr><p><strong>{{queryset.Trailing_Units}}</strong></p></tr>
+{% endif %}
+
+   {% if instance.Cargo_Body_Type != queryset.Cargo_Body_Type %}
+<tr><p class="text-danger">Cargo Body Type</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.Cargo_Body_Type}}</strong></p></tr>
+   {% else %}
+<tr><p>Cargo Body Type</p></tr>
+<tr><p><strong>{{queryset.Cargo_Body_Type}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Special_Function_Code != queryset.Special_Function_Code %}
+<tr><p class="text-danger">Special Function Code</p></tr>
+<tr><p class="bg-danger"><strong>{{queryset.Special_Function_Code}}</strong></p></tr>
+   {% else %}
+<tr><p>Special Function Code</p></tr>
+<tr><p><strong>{{queryset.Special_Function_Code}}</strong></p></tr>
+{% endif %}
+
+{% if instance.First_Event != queryset.First_Event %}
+<tr><p class="text-danger">First Event</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.First_Event}}</strong></p></tr>
+   {% else %}
+<tr><p>First Event</tr></p>
+<tr><p><strong>{{queryset.First_Event}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Second_Event != queryset.Second_Event %}
+<tr><p class="text-danger">Second Event </tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Second_Event}}</strong></p></tr>
+   {% else %}
+<tr><p>Second Event </tr></p>
+<tr><p><strong>{{queryset.Second_Event}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Third_Event != queryset.Third_Event %}
+<tr><p class="text-danger">Third Event</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Third_Event}}</strong></p></tr>
+   {% else %}
+<tr><p>Third Event</tr></p>
+<tr><p><strong>{{queryset.Third_Event}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Fourth_Event != queryset.Fourth_Event %}
+<tr><p class="text-danger">Fourth Event</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Fourth_Event}}</strong></p></tr>
+   {% else %}
+<tr><p>Fourth Event</tr></p>
+<tr><p><strong>{{queryset.Fourth_Event}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Roadway_Description != queryset.Roadway_Description %}
+<tr><p>Roadway Description</tr></p>
+<tr><p><strong>{{queryset.Roadway_Description}}</strong></p></tr>
+   {% else %}
+<tr><p class="text-danger">Roadway Description</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Roadway_Description}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Disposition_Of_Vehicle != queryset.Disposition_Of_Vehicle  %}
+<tr><p class="text-danger">Disposition Of Vehicle</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Disposition_Of_Vehicle }}</strong></p></tr>
+   {% else %}
+<tr><p>Disposition Of Vehicle</tr></p>
+<tr><p><strong>{{queryset.Disposition_Of_Vehicle }}</strong></p></tr>
+{% endif %}
+
+{% if instance.Towed_By != queryset.Towed_By %}
+<tr><p>Towed By</tr></p>
+<tr><p><strong>{{queryset.Towed_By}}</strong></p></tr>
+   {% else %}
+<tr><p class="text-danger">Towed By</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Towed_By}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Carrier_Name != queryset.Carrier_Name %}
+<tr><p class="text-danger">Carrier Name</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Carrier_Name}}</strong></p></tr>
+   {% else %}
+<tr><p>Carrier Name</tr></p>
+<tr><p><strong>{{queryset.Carrier_Name}}</strong></p></tr>
+{% endif %}
+
+{% if instance.US_DOT_Number != queryset.US_DOT_Number %}
+<tr><p class="text-danger">US DOT Number</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.US_DOT_Number}}</strong></p></tr>
+   {% else %}
+<tr><p>US DOT Number</tr></p>
+<tr><p><strong>{{queryset.US_DOT_Number}}</strong></p></tr>
+{% endif %}
+
+{% if instance.US_DOT_Verified != queryset.US_DOT_Verified %}
+<tr><p class="text-danger">US DOT Verified</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.US_DOT_Verified}}</strong></p></tr>
+   {% else %}
+<tr><p>US DOT Verified</tr></p>
+<tr><p><strong>{{queryset.US_DOT_Verified}}</strong></p></tr>
+{% endif %}
+
+{% if instance.GCWR_GVWR != queryset.GCWR_GVWR %}
+<tr><p class="text-danger">GCWR GVWR</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.GCWR_GVWR}}</strong></p></tr>
+   {% else %}
+<tr><p>GCWR GVWR</tr></p>
+<tr><p><strong>{{queryset.GCWR_GVWR}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Carrier_Address_Street != queryset.Carrier_Address_Street %}
+<tr><p>Carrier Address Street</tr></p>
+<tr><p><strong>{{queryset.Carrier_Address_Street}}</strong></p></tr>
+   {% else %}
+<tr><p class="text-danger">Carrier Address Street</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Carrier_Address_Street}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Carrier_Address_Street2 != queryset.Carrier_Address_Street2 %}
+<tr><p>Carrier Address Street2</tr></p>
+<tr><p><strong>{{queryset.Carrier_Address_Street2}}</strong></p></tr>
+   {% else %}
+<tr><p class="text-danger">Carrier Address Street2</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Carrier_Address_Street2}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Carrier_Address_City != queryset.Carrier_Address_City %}
+<tr><p class="text-danger">Carrier Address City</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Carrier_Address_City}}</strong></p></tr>
+   {% else %}
+<tr><p>Carrier Address City</tr></p>
+<tr><p><strong>{{queryset.Carrier_Address_City}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Carrier_Address_State != queryset.Carrier_Address_State %}
+<tr><p class="text-danger">Carrier Address State</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Carrier_Address_State}}</strong></p></tr>
+   {% else %} 
+<tr><p>Carrier Address State</tr></p>
+<tr><p><strong>{{queryset.Carrier_Address_State}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Carrier_Address_Zip != queryset.Carrier_Address_Zip %}
+<tr><p class="text-danger">Carrier Address Zip</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Carrier_Address_Zip}}</strong></p></tr>
+   {% else %}
+<tr><p>Carrier Address Zip</tr></p>
+<tr><p><strong>{{queryset.Carrier_Address_Zip}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Carrier_Address_County != queryset.Carrier_Address_County %}
+<tr><p class="text-danger">Carrier Address County</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Carrier_Address_County}}</strong></p></tr>
+   {% else %}
+<tr><p>Carrier Address County</tr></p>
+<tr><p><strong>{{queryset.Carrier_Address_County}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Carrier_Address_Phone != queryset.Carrier_Address_Phone %}
+<tr><p class="text-danger">Carrier Address Phone</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Carrier_Address_Phone}}</strong></p></tr>
+   {% else %}
+<tr><p>Carrier Address Phone</tr></p>
+<tr><p><strong>{{queryset.Carrier_Address_Phone}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Is_Driver_Carrier != queryset.Is_Driver_Carrier %}
+<tr><p class="text-danger">Is Driver Carrier</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Is_Driver_Carrier}}</strong></p></tr>
+   {% else %}
+<tr><p>Is Driver Carrier</tr></p>
+<tr><p><strong>{{queryset.Is_Driver_Carrier}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Interstate != queryset.Interstate %}
+<tr><p class="text-danger">Interstate</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Interstate}}</strong></p></tr>
+   {% else %}
+<tr><p>Interstate</tr></p>
+<tr><p><strong>{{queryset.Interstate}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Cargo_Code != queryset.Cargo_Code %}
+<tr><p class="text-danger">Cargo Code</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Cargo_Code}}</strong></p></tr>
+   {% else %}
+<tr><p>Cargo Code</tr></p>
+<tr><p><strong>{{queryset.Cargo_Code}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Hazmat_Released != queryset.Hazmat_Released %}
+<tr><p class="text-danger">Hazmat Released</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Hazmat_Released}}</strong></p></tr>
+   {% else %}
+<tr><p>Hazmat Released</tr></p>
+<tr><p><strong>{{queryset.Hazmat_Released}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Hazmat_Placard_Number != queryset.Hazmat_Placard_Number %}
+<tr><p class="text-danger">Hazmat Placard Number</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Hazmat_Placard_Number}}</strong></p></tr>
+   {% else %}
+<tr><p>Hazmat Placard Number</tr></p>
+<tr><p><strong>{{queryset.Hazmat_Placard_Number}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Is_Drive_Carrier != queryset.Is_Drive_Carrier %}
+<tr><p class="text-danger">Is Drive Carrier</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Is_Drive_Carrier}}</strong></p></tr>
+   {% else %}
+<tr><p>Is Drive Carrier</tr></p>
+<tr><p><strong>{{queryset.Is_Drive_Carrier}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Owner_First != queryset.Owner_First %}
+<tr><p class="text-danger">Owner First</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Owner_First}}</strong></p></tr>
+   {% else %}
+<tr><p>Owner First</tr></p>
+<tr><p><strong>{{queryset.Owner_First}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Owner_Middle != queryset.Owner_Middle %}
+<tr><p class="text-danger">Owner Middle</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Owner_Middle}}</strong></p></tr>
+   {% else %}
+<tr><p>Owner Middle</tr></p>
+<tr><p><strong>{{queryset.Owner_Middle}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Owner_Last != queryset.Owner_Last %}
+<tr><p class="text-danger">Owner Last</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Owner_Last}}</strong></p></tr>
+   {% else %}
+<tr><p>Owner First</tr></p>
+<tr><p><strong>{{queryset.Owner_Last}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Owner_Address_Street != queryset.Owner_Address_Street %}
+<tr><p class="text-danger">Owner Address Street</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Owner_Address_Street}}</strong></p></tr>
+   {% else %}
+<tr><p>Owner Address Street</tr></p>
+<tr><p><strong>{{queryset.Owner_Address_Street}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Owner_Address_Stree2t != queryset.Owner_Address_Street2 %}
+<tr><p class="text-danger">Owner Address Street2</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Owner_Address_Street2}}</strong></p></tr>
+   {% else %}
+<tr><p>Owner Address Street2</tr></p>
+<tr><p><strong>{{queryset.Owner_Address_Street2}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Owner_Address_City != queryset.Owner_Address_City %}
+<tr><p class="text-danger">Owner Address City</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Owner_Address_City}}</strong></p></tr>
+   {% else %}
+<tr><p>Owner Address City</tr></p>
+<tr><p><strong>{{queryset.Owner_Address_City}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Owner_Address_State != queryset.Owner_Address_State %}
+<tr><p class="text-danger">Owner Address State</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Owner_Address_State}}</strong></p></tr>
+   {% else %}
+<tr><p>Owner Address State</tr></p>
+<tr><p><strong>{{queryset.Owner_Address_State}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Owner_Address_Zip != queryset.Owner_Address_Zip %}
+<tr><p class="text-danger">Owner Address Zip</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Owner_Address_Zip}}</strong></p></tr>
+   {% else %}
+<tr><p>Owner Address Zip</tr></p>
+<tr><p><strong>{{queryset.Owner_Address_Zip}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Owner_Phone != queryset.Owner_Phone %}
+<tr><p class="text-danger">Owner Phone</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Owner_Phone}}</strong></p></tr>
+   {% else %}
+<tr><p>Owner Phone</tr></p>
+<tr><p><strong>{{queryset.Owner_Phone}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Vehicle_ID != queryset.Vehicle_ID %}
+<tr><p class="text-danger">Vehicle ID</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Vehicle_ID}}</strong></p></tr>
+   {% else %}
+<tr><p>Vehicle ID</tr></p>
+<tr><p><strong>{{queryset.Vehicle_ID}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Vehicle_Number != queryset.Vehicle_Number %}
+<tr><p class="text-danger">Vehicle Number</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Vehicle_Number}}</strong></p></tr>
+   {% else %}
+<tr><p>Vehicle Number</tr></p>
+<tr><p><strong>{{queryset.Vehicle_Number}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Make != queryset.Make %}
+<tr><p class="text-danger">Make</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Make}}</strong></p></tr>
+   {% else %}
+<tr><p>Make</tr></p>
+<tr><p><strong>{{queryset.Make}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Vehicle_Model != queryset.Vehicle_Model %}
+<tr><p class="text-danger">Vehicle Model</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Vehicle_Model}}</strong></p></tr>
+   {% else %}
+<tr><p>Vehicle Model</tr></p>
+<tr><p><strong>{{queryset.Vehicle_Model}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Travel_Direction != queryset.Travel_Direction %}
+<tr><p class="text-danger">Travel Direction</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Travel_Direction}}</strong></p></tr>
+   {% else %}
+<tr><p>Travel Direction</tr></p>
+<tr><p><strong>{{queryset.Travel_Direction}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Vehicle_Maneuver != queryset.Vehicle_Maneuver %}
+<tr><p class="text-danger">Vehicle_Maneuver</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Vehicle_Maneuver}}</strong></p></tr>
+   {% else %}
+<tr><p>Vehicle Maneuver</tr></p>
+<tr><p><strong>{{queryset.Vehicle_Maneuver}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Traffic_Control_Device != queryset.Traffic_Control_Device %}
+<tr><p class="text-danger">Traffic Control Device</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Traffic_Control_Device}}</strong></p></tr>
+   {% else %}
+<tr><p>Traffic Control Device</tr></p>
+<tr><p><strong>{{queryset.Traffic_Control_Device}}</strong></p></tr>
+{% endif %}
+
+{% if instance.Driver_Condition != queryset.Driver_Condition %}
+<tr><p class="text-danger">Driver Condition</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.Driver_Condition}}</strong></p></tr>
+   {% else %}
+<tr><p>Driver Condition</tr></p>
+<tr><p><strong>{{queryset.Driver_Condition}}</strong></p></tr>
+{% endif %}
+
+{% if instance.created_date != queryset.created_date %}
+<tr><p class="text-danger">created date</tr></p>
+<tr><p class="bg-danger"><strong>{{queryset.created_date}}</strong></p></tr>
+   {% else %}
+<tr><p>created date</tr></p>
+<tr><p><strong>{{queryset.created_date}}</strong></p></tr>
+{% endif %}
+
+    {% endfor %}
+  {% endif %}
+
+</table>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+
+var url = "{% url 'delete_cv' pk=queryset.pk %}";
+function myFunction() {
+    if (document.getElementById("myCheck").checked){
+        $("g").append("<a href='{% url 'delete_cv' pk=queryset.pk %}'><button type='button' class='btn btn-info'>Submit</button></a>");
+       
+}
+    else{
+        var x ="To proceed with the changes please check the box";
+        document.getElementById("demo").innerHTML = x;}
+        
+}
+</script>
+ 
+   
+</body>
+</html>
+
+
+
+

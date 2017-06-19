@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %}
+{% include 'head_css.html' %}
+{% include 'navbar.html' %}
+  <title>Audit Table {{queryset.PS_case}}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+* {
+    box-sizing: border-box;
+}
+
+.columns {
+    float: left;
+    width: 33.3%;
+    padding: 8px;
+}
+
+@media only screen and (max-width: 600px) {
+    .columns {
+        width: 100%;
+    }
+}
+
+div.panel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: 0.6s ease-in-out;
+    opacity: 0;
+}
+
+div.panel.show {
+    opacity: 1;
+    max-height: 500px;
+}
+
+#myInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 12px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myUL {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#myUL li a {
+  border: 1px solid #ddd;
+  margin-top: -1px; /* Prevent double borders */
+  background-color: #f6f6f6;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
+  display: block
+}
+
+#myUL li a.header {
+  background-color: #e2e2e2;
+  cursor: default;
+}
+
+#myUL li a:hover:not(.header) {
+  background-color: #eee;
+
+
+table, td, th {
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 15px;
+}
+
+</style>
+
+
+<body>
+
+
+<div class="col-sm-8">
+
+      <div class="well">
+        <h4>Audit Vehicle Records</h4>
+        <iframe src="/auditframe/" height="1000" width="900"></iframe>
+
+      </div>
+
+</div>
+
+    
+<div class="columns">
+      <div class="well">
+
+  <h1>Audit Vehicle Record {{queryset.PS_case}}</h1>
+
+
+
+<table><tr><p>Public Safety Case #</p></tr><tr><p><strong>{{queryset.PS_case}}</strong></p></tr><tr><p>Old Analyst:</p></tr><tr><p><strong>{{queryset.user_id_OLD}}</strong></p></tr>
+<tr>Analyst:</tr><tr><p><strong>{{queryset.user_id}}</strong></p></tr><tr><p>OldUpdated Time</p></tr><tr><p><strong>{{queryset.UpdatedTime}}</strong></p></tr> 
+
+{% if queryset.Make_OLD != queryset.Make %}
+<tr><p>Old Make</p></tr>
+<tr><p><strong>{{queryset.Make_OLD}}</strong></p></tr>
+<tr><p>Make</p></tr>
+<tr><p><strong>{{queryset.Make}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Vehicle_Maneuver_OLD != queryset.Vehicle_Maneuver %}
+<tr><p>Old Vehicle Maneuver</p></tr>
+<tr><p><strong>{{queryset.Vehicle_Maneuver_OLD}}</strong></p></tr>
+<tr><p>Vehicle Maneuver</p></tr>
+<tr><p><strong>{{queryset.Vehicle_Maneuver}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Vehicle_Number_OLD != queryset.Vehicle_Number %}
+<tr><p>Old Vehicle Number</p></tr>
+<tr><p><strong>{{queryset.Vehicle_Number_OLD}}</strong></p></tr>
+<tr><p>Vehicle Number</p></tr>
+<tr><p><strong>{{queryset.Vehicle_Number}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Vin_Verified_OLD != queryset.Vin_Verified %}
+<tr><p>Old Vin Verified</p></tr>
+<tr><p><strong>{{queryset.Vin_Verified_OLD}}</strong></p></tr>
+<tr><p>Vin Verified</p></tr>
+<tr><p><strong>{{queryset.Vin_Verified}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.License_Plate_Number_OLD != queryset.License_Plate_Number %}
+<tr><p>Old License Plate Number</p></tr>
+<tr><p><strong>{{queryset.License_Plate_Number_OLD}}</strong></p></tr>
+<tr><p>License Plate Number</p></tr>
+<tr><p><strong>{{queryset.License_Plate_Number}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Motor_Vehicle_Body_OLD != queryset.Motor_Vehicle_Body %}
+<tr><p>Old Motor Vehicle Body</p></tr>
+<tr><p><strong>{{queryset.Motor_Vehicle_Body_OLD}}</strong></p></tr>
+<tr><p>Motor Vehicle Body</p></tr>
+<tr><p><strong>{{queryset.Motor_Vehicle_Body}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Trailing_Units_OLD != queryset.Trailing_Units %}
+<tr><p>Old Trailing Units</p></tr>
+<tr><p><strong>{{queryset.Trailing_Units_OLD}}</strong></p></tr>
+<tr><p>Trailing Units</p></tr>
+<tr><p><strong>{{queryset.Trailing_Units}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Cargo_Body_Type_OLD != queryset.Cargo_Body_Type %}
+<tr><p>Old Cargo Body</p></tr>
+<tr><p><strong>{{queryset.Cargo_Body_Type_OLD}}</strong></p></tr>
+<tr><p>Cargo Body</p></tr>
+<tr><p><strong>{{queryset.Cargo_Body_Type}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Special_Function_Code_OLD != queryset.Special_Function_Code %}
+<tr><p>Old Special Function Code</p></tr>
+<tr><p><strong>{{queryset.Special_Function_Code_OLD}}</strong></p></tr>
+<tr><p>Special Function Code</p></tr>
+<tr><p><strong>{{queryset.Special_Function_Code}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.First_Event_OLD != queryset.First_Event %}
+<tr><p>Old First Event</p></tr>
+<tr><p><strong>{{queryset.First_Event_OLD}}</strong></p></tr>
+<tr><p>First Event</p></tr>
+<tr><p><strong>{{queryset.First_Event}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Second_Event_OLD != queryset.Second_Event %}
+<tr><p>Old Second Event</p></tr>
+<tr><p><strong>{{queryset.Second_Event_OLD}}</strong></p></tr>
+<tr><p>Second Event</p></tr>
+<tr><p><strong>{{queryset.Second_Event}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Third_Event_OLD != queryset.Third_Event %}
+<tr><p>Old Third Event</p></tr>
+<tr><p><strong>{{queryset.Third_Event_OLD}}</strong></p></tr>
+<tr><p>Third Event</p></tr>
+<tr><p><strong>{{queryset.Third_Event}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Fourth_Event_OLD != queryset.Fourth_Event %}
+<tr><p>Old Fourth Event</p></tr>
+<tr><p><strong>{{queryset.Fourth_Event_OLD}}</strong></p></tr>
+<tr><p>Fourth Event</p></tr>
+<tr><p><strong>{{queryset.Fourth_Event}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Roadway_Description_OLD != queryset.Roadway_Description %}
+<tr><p>Old Roadway Description</p></tr>
+<tr><p><strong>{{queryset.Roadway_Description_OLD}}</strong></p></tr>
+<tr><p>Roadway Description</p></tr>
+<tr><p><strong>{{queryset.Roadway_Description}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Disposition_Of_Vehicle_OLD != queryset.Disposition_Of_Vehicle %}
+<tr><p>Old Disposition of Vehicle</p></tr>
+<tr><p><strong>{{queryset.Disposition_Of_Vehicle_OLD}}</strong></p></tr>
+<tr><p>Disposition of Vehicle</p></tr>
+<tr><p><strong>{{queryset.Disposition_Of_Vehicle}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Towed_By_OLD != queryset.Towed_By %}
+<tr><p>Old Towed By</p></tr>
+<tr><p><strong>{{queryset.Towed_By_OLD}}</strong></p></tr>
+<tr><p>Towed By</p></tr>
+<tr><p><strong>{{queryset.Towed_By}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Carrier_Name_OLD != queryset.Carrier_Name %}
+<tr><p>Old Carrier Name</p></tr>
+<tr><p><strong>{{queryset.Carrier_Name_OLD}}</strong></p></tr>
+<tr><p>Carrier Name</p></tr>
+<tr><p><strong>{{queryset.Carrier_Name}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.US_DOT_Number_OLD != queryset.US_DOT_Number %}
+<tr><p>Old US DOT #</p></tr>
+<tr><p><strong>{{queryset.US_DOT_Number_OLD}}</strong></p></tr>
+<tr><p>US DOT #</p></tr>
+<tr><p><strong>{{queryset.US_DOT_Number}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.US_DOT_Verified_OLD != queryset.US_DOT_Verified %}
+<tr><p>Old US DOT Verified</p></tr>
+<tr><p><strong>{{queryset.US_DOT_Verified_OLD}}</strong></p></tr>
+<tr><p>US DOT Verified</p></tr>
+<tr><p><strong>{{queryset.US_DOT_Verified}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.GCWR_GVWR_OLD != queryset.GCWR_GVWR%}
+<tr><p>Old GCWR GVWR</p></tr>
+<tr><p><strong>{{queryset.GCWR_GVWR_OLD}}</strong></p></tr>
+<tr><p>GCWR GVWR</p></tr>
+<tr><p><strong>{{queryset.GCWR_GVWR}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Carrier_Address_Street_OLD != queryset.Carrier_Address_Street %}
+<tr><p>Old Carrier Address Street</p></tr>
+<tr><p><strong>{{queryset.Carrier_Address_Street_OLD}}</strong></p></tr>
+<tr><p>Carrier Address Street</p></tr>
+<tr><p><strong>{{queryset.Carrier_Address_Street}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Carrier_Address_Street2_OLD != queryset.Carrier_Address_Street2 %}
+<tr><p>Old Carrier Address Street2</p></tr>
+<tr><p><strong>{{queryset.Carrier_Address_Street2_OLD}}</strong></p></tr>
+<tr><p>Carrier Address Street2</p></tr>
+<tr><p><strong>{{queryset.Carrier_Address_Street2}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Carrier_Address_City_OLD != queryset.Carrier_Address_City %}
+<tr><p>Old Carrier Address City</p></tr>
+<tr><p><strong>{{queryset.Carrier_Address_City_OLD}}</strong></p></tr>
+<tr><p>Carrier Address City</p></tr>
+<tr><p><strong>{{queryset.Carrier_Address_City}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Carrier_Address_State_OLD != queryset.Carrier_Address_State %}
+<tr><p>Old Carrier Address State</p></tr>
+<tr><p><strong>{{queryset.Carrier_Address_State_OLD}}</strong></p></tr>
+<tr><p>Carrier Address State</p></tr>
+<tr><p><strong>{{queryset.Carrier_Address_State}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Carrier_Address_Zip_OLD != queryset.Carrier_Address_Zip %}
+<tr><p>Old Carrier Address Zip</p></tr>
+<tr><p><strong>{{queryset.Carrier_Address_Zip_OLD}}</strong></p></tr>
+<tr><p>Carrier Address Zip</p></tr>
+<tr><p><strong>{{queryset.Carrier_Address_Zip}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Carrier_Address_County_OLD != queryset.Carrier_Address_County %}
+<tr><p>Old Carrier Address County</p></tr>
+<tr><p><strong>{{queryset.Carrier_Address_County_OLD}}</strong></p></tr>
+<tr><p>Carrier Address County</p></tr>
+<tr><p><strong>{{queryset.Carrier_Address_County}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Carrier_Address_Phone_OLD != queryset.Carrier_Address_Phone %}
+<tr><p>Old Carrier Address Phone</p></tr>
+<tr><p><strong>{{queryset.Carrier_Address_Phone_OLD}}</strong></p></tr>
+<tr><p>Carrier Address Phone</p></tr>
+<tr><p><strong>{{queryset.Carrier_Address_Phone}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Is_Driver_Carrier_OLD != queryset.Is_Driver_Carrier %}
+<tr><p>Old Is Driver Carrier</p></tr>
+<tr><p><strong>{{queryset.Is_Driver_Carrier_OLD}}</strong></p></tr>
+<tr><p>Is Driver Carrier</p></tr>
+<tr><p><strong>{{queryset.Is_Driver_Carrier}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Interstate_OLD != queryset.Interstate %}
+<tr><p>Old Interstate</p></tr>
+<tr><p><strong>{{queryset.Interstate_OLD}}</strong></p></tr>
+<tr><p>Interstate</p></tr>
+<tr><p><strong>{{queryset.Interstate}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Cargo_Code_OLD != queryset.Cargo_Code %}
+<tr><p>Old Cargo Code</p></tr>
+<tr><p><strong>{{queryset.Cargo_Code_OLD}}</strong></p></tr>
+<tr><p>Cargo Code</p></tr>
+<tr><p><strong>{{queryset.Cargo_Code}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Hazmat_Released_OLD != queryset.Hazmat_Released %}
+<tr><p>Old Hazamat Released</p></tr>
+<tr><p><strong>{{queryset.Hazmat_Released_OLD}}</strong></p></tr>
+<tr><p>Hazamat Released</p></tr>
+<tr><p><strong>{{queryset.Hazmat_Released}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Hazmat_Placard_Number_OLD != queryset.Hazmat_Placard_Number %}
+<tr><p>Old Hazmat Placard #</p></tr>
+<tr><p><strong>{{queryset.Hazmat_Placard_Number_OLD}}</strong></p></tr>
+<tr><p>Hazmat Placard #</p></tr>
+<tr><p><strong>{{queryset.Hazmat_Placard_Number}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Is_Owner_Driver_OLD != queryset.Is_Owner_Driver %}
+<tr><p>Old Is Owner Driver</p></tr>
+<tr><p><strong>{{queryset.Is_Owner_Driver_OLD}}</strong></p></tr>
+<tr><p>Is Owner Driver</p></tr>
+<tr><p><strong>{{queryset.Is_Owner_Driver}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Owner_First_OLD != queryset.Owner_First %}
+<tr><p>Old Owner First</p></tr>
+<tr><p><strong>{{queryset.Owner_First_OLD}}</strong></p></tr>
+<tr><p>Owner First</p></tr>
+<tr><p><strong>{{queryset.Owner_First}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Owner_Middle_OLD != queryset.Owner_Middle %}
+<tr><p>Old Owner Middle</p></tr>
+<tr><p><strong>{{queryset.Owner_Middle_OLD}}</strong></p></tr>
+<tr><p>Owner Middle</p></tr>
+<tr><p><strong>{{queryset.Owner_Middle}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Owner_Last_OLD != queryset.Owner_Last %}
+<tr><p>Old Owner Last</p></tr>
+<tr><p><strong>{{queryset.Owner_Last_OLD}}</strong></p></tr>
+<tr><p>Owner Last</p></tr>
+<tr><p><strong>{{queryset.Owner_Last}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Owner_Address_Street_OLD != queryset.Owner_Address_Street %}
+<tr><p>Old Owner Address Street</p></tr>
+<tr><p><strong>{{queryset.Owner_Address_Street_OLD}}</strong></p></tr>
+<tr><p>Owner Address Street</p></tr>
+<tr><p><strong>{{queryset.Owner_Address_Street}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Owner_Address_Street2_OLD != queryset.Owner_Address_Street2 %}
+<tr><p>Old Owner Address Street2</p></tr>
+<tr><p><strong>{{queryset.Owner_Address_Street2_OLD}}</strong></p></tr>
+<tr><p>Owner Address Street2</p></tr>
+<tr><p><strong>{{queryset.Owner_Address_Street2}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Owner_Address_City_OLD != queryset.Owner_Address_City %}
+<tr><p>Old Owner Address City</p></tr>
+<tr><p><strong>{{queryset.Owner_Address_City_OLD}}</strong></p></tr>
+<tr><p>Owner Address City</p></tr>
+<tr><p><strong>{{queryset.Owner_Address_City}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Owner_Address_State_OLD != queryset.Owner_Address_State %}
+<tr><p>Old Owner Address State</p></tr>
+<tr><p><strong>{{queryset.Owner_Address_State_OLD}}</strong></p></tr>
+<tr><p>Owner Address State</p></tr>
+<tr><p><strong>{{queryset.Owner_Address_State}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Owner_Address_Zip_OLD != queryset.Owner_Address_Zip %}
+<tr><p>Old Owner Address Zip</p></tr>
+<tr><p><strong>{{queryset.Owner_Address_Zip_OLD}}</strong></p></tr>
+<tr><p>Owner Address Zip</p></tr>
+<tr><p><strong>{{queryset.Owner_Address_Zip}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Owner_Address_Phone_OLD != Owner.Carrier_Address_Phone %}
+<tr><p>Old Owner Address Phone</p></tr>
+<tr><p><strong>{{queryset.Owner_Address_Phone_OLD}}</strong></p></tr>
+<tr><p>Owner Address Phone</p></tr>
+<tr><p><strong>{{queryset.Owner_Address_Phone}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Travel_Direction_OLD != queryset.Travel_Direction %}
+<tr><p>Old Travel Direction</p></tr>
+<tr><p><strong>{{queryset.Travel_Direction_OLD}}</strong></p></tr>
+<tr><p>Travel Direction</p></tr>
+<tr><p><strong>{{queryset.Travel_Direction}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Traffic_Control_Device_OLD != queryset.Traffic_Control_Device %}
+<tr><p>Old Traffic Control Device</p></tr>
+<tr><p><strong>{{queryset.Traffic_Control_Device_OLD}}</strong></p></tr>
+<tr><p>Traffic Control Device</p></tr>
+<tr><p><strong>{{queryset.Traffic_Control_Device}}</strong></p></tr>
+{% endif %}
+
+{% if queryset.Driver_Condition_OLD != queryset.Driver_Condition %}
+<tr><p>Old Driver Condition</p></tr>
+<tr><p><strong>{{queryset.Driver_Condition_OLD}}</strong></p></tr>
+<tr><p>Driver Condition</p></tr>
+<tr><p><strong>{{queryset.Driver_Condition}}</strong></p></tr>
+{% endif %}
+</table>
+
+</div>
+</div>
+ 
+   
+</body>
+</html>
